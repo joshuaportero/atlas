@@ -18,8 +18,10 @@ public class AtlasPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        this.loadConfig();
+
         this.liteCommands = LiteBukkitFactory.builder("atlas", this)
-                .commands(new AtlasCMD())
+                .commands(new AtlasCMD(this))
                 .extension(new LiteAdventureExtension<>(), config -> config
                         .miniMessage(true)
                         .legacyColor(true)
@@ -36,5 +38,10 @@ public class AtlasPlugin extends JavaPlugin {
         if (this.liteCommands != null) {
             this.liteCommands.unregister();
         }
+    }
+
+    private void loadConfig() {
+        this.getConfig().options().copyDefaults(true);
+        this.saveDefaultConfig();
     }
 }

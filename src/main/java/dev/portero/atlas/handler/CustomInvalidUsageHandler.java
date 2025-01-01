@@ -11,6 +11,7 @@ public class CustomInvalidUsageHandler implements InvalidUsageHandler<CommandSen
 
     @Override
     public void handle(Invocation<CommandSender> invocation, InvalidUsage<CommandSender> result, ResultHandlerChain<CommandSender> chain) {
-        Messages.ERROR_INVALID_USAGE.send(invocation.sender());
+        CommandSender sender = invocation.sender();
+        Messages.ERROR_INVALID_USAGE.send(sender);
     }
 }

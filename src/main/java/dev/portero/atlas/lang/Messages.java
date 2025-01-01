@@ -4,14 +4,12 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
 import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 public interface Messages {
 
     Arg0 ERROR_NO_PERMISSION = () -> text("You don't have permission to do that!", RED);
     Arg0 ERROR_INVALID_USAGE = () -> text("The command doesn't support the provided arguments!", RED);
-
-    Arg0 WELCOME = () -> text("Welcome to Atlas!", GOLD);
 
     interface Arg0 {
         Component build();
@@ -20,4 +18,13 @@ public interface Messages {
             sender.sendMessage(build());
         }
     }
+
+    interface Arg1<A0> {
+        Component build(A0 a0);
+
+        default void send(CommandSender sender, A0 a0) {
+            sender.sendMessage(build(a0));
+        }
+    }
+
 }

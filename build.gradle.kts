@@ -32,6 +32,7 @@ dependencies {
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("dev.rollczi:litecommands-bukkit:3.9.5")
     implementation("dev.rollczi:litecommands-adventure:3.9.5")
+    implementation("dev.triumphteam:triumph-gui:3.1.11")
 }
 
 bukkit {
@@ -53,7 +54,8 @@ tasks.withType<ShadowJar> {
     archiveVersion.set("")
     archiveClassifier.set("")
 
-    relocate("dev.rollczi.litecommands", "dev.portero.atlas.litecommands")
+    relocate("dev.rollczi.litecommands", "dev.portero.atlas.commands")
+    relocate("dev.triumphteam.gui", "dev.portero.atlas.gui")
 }
 
 tasks.withType<RunServer> {
