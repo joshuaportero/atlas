@@ -11,6 +11,6 @@ public class MissingPermissionHandler implements MissingPermissionsHandler<Comma
 
     @Override
     public void handle(Invocation<CommandSender> invocation, MissingPermissions missingPermissions, ResultHandlerChain<CommandSender> chain) {
-        Messages.ERROR_NO_PERMISSION.send(invocation.sender());
+        Messages.Error.NO_PERMISSION.send(invocation.sender());
     }
 }
