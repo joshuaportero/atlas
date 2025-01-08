@@ -1,8 +1,10 @@
 package dev.portero.atlas;
 
 import dev.portero.atlas.cmd.AtlasCMD;
+import dev.portero.atlas.cmd.RestartCMD;
 import dev.portero.atlas.handler.CustomInvalidUsageHandler;
 import dev.portero.atlas.handler.MissingPermissionHandler;
+import dev.portero.atlas.manager.RestartManager;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -18,10 +20,15 @@ public class AtlasPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        RestartManager restartManager = new RestartManager();
+
         this.loadConfig();
 
         this.liteCommands = LiteBukkitFactory.builder("atlas", this)
-                .commands(new AtlasCMD(this))
+                .commands(
+                        new AtlasCMD(this),
+                        new RestartCMD(this, restartManager)
+                )
                 .extension(new LiteAdventureExtension<>(), config -> config
                         .miniMessage(true)
                         .legacyColor(true)
