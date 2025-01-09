@@ -9,8 +9,6 @@ import java.util.Map;
 @Data
 public class ChatManager {
     private int slowModeSeconds;
-
-    private boolean disabled;
-
-    private Map<String, Instant> messageCooldowns = new HashMap<>();
+    private boolean isChatDisabled;
+    private Map<String, Instant> playerMessageTimestamps = new HashMap<>();
 }

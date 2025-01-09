@@ -20,14 +20,14 @@ public class ChatManagerListener implements Listener {
     public void onPlayerChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
 
-        if (chatManager.isDisabled()) {
+        if (chatManager.isChatDisabled()) {
             event.setCancelled(true);
             Messages.ChatManager.DISABLED.send(player);
             return;
         }
 
         if (chatManager.getSlowModeSeconds() > 0) {
-            Map<String, Instant> messageCooldowns = chatManager.getMessageCooldowns();
+            Map<String, Instant> messageCooldowns = chatManager.getPlayerMessageTimestamps();
             if (messageCooldowns.containsKey(player.getName())) {
                 Instant lastMessage = messageCooldowns.get(player.getName());
                 long timeSinceLastMessage = System.currentTimeMillis() - lastMessage.toEpochMilli();

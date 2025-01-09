@@ -42,23 +42,23 @@ public class ChatManagerCMD {
 
     @Execute(name = "enable")
     public void enable(@Context CommandSender sender) {
-        if (!chatManager.isDisabled()) {
+        if (!chatManager.isChatDisabled()) {
             Messages.ChatManager.CHAT_ALREADY_ENABLED.send(sender);
             return;
         }
 
-        chatManager.setDisabled(false);
+        chatManager.setChatDisabled(false);
         Messages.ChatManager.CHAT_ENABLED.broadcast();
     }
 
     @Execute(name = "disable")
     public void disable(@Context CommandSender sender) {
-        if (chatManager.isDisabled()) {
+        if (chatManager.isChatDisabled()) {
             Messages.ChatManager.CHAT_ALREADY_DISABLED.send(sender);
             return;
         }
 
-        chatManager.setDisabled(true);
+        chatManager.setChatDisabled(true);
         Messages.ChatManager.CHAT_DISABLED.broadcast();
     }
 
