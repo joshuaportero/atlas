@@ -1,4 +1,4 @@
-package dev.portero.atlas.util;
+package dev.portero.atlas.text;
 
 public enum FontInfo {
 

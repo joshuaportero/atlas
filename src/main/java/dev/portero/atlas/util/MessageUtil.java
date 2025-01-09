@@ -1,5 +1,6 @@
 package dev.portero.atlas.util;
 
+import dev.portero.atlas.text.FontInfo;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.Style;
