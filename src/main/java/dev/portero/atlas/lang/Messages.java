@@ -12,7 +12,22 @@ public interface Messages {
 
     interface Error {
         Arg0 NO_PERMISSION = () -> "&cYou don't have permission to do that!";
-        Arg0 INVALID_USAGE = () -> "&cThe command doesn't support the provided arguments!";
+
+        interface InvalidUsage {
+            Arg1<String> ONLY_FIRST = (name) -> "&cThe command &e" + name + "&c doesn't support the provided arguments!";
+            Arg1<String> TITLE = (cmd) -> "&cAvailable commands(" + cmd.split(" ")[0] + "):";
+            Arg1<String> ARGS = (cmd) -> {
+                String[] args = cmd.split(" ");
+                StringBuilder builder = new StringBuilder();
+                String[] colors = new String[]{"&7", "&c"};
+
+                builder.append("&8・");
+                for (int i = 0; i < args.length; i++) {
+                    builder.append(colors[i % colors.length]).append(args[i]).append(" ");
+                }
+                return builder.toString();
+            };
+        }
     }
 
     interface ChatManager {
