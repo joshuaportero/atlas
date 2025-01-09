@@ -1,65 +1,57 @@
 package dev.portero.atlas.lang;
 
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
-import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import java.util.function.Supplier;
 
 public interface Messages {
 
     interface Error {
-        Arg0 NO_PERMISSION = () -> text("You don't have permission to do that!", RED);
-        Arg0 INVALID_USAGE = () -> text("The command doesn't support the provided arguments!", RED);
+        Arg0 NO_PERMISSION = () -> "&cYou don't have permission to do that!";
+        Arg0 INVALID_USAGE = () -> "&cThe command doesn't support the provided arguments!";
     }
 
     interface Restart {
-        Arg1<Integer> RESTART = (seconds) -> text("[SERVER]", RED)
-                .appendSpace()
-                .append(text("The server will restart in", GRAY))
-                .appendSpace()
-                .append(text(seconds, YELLOW))
-                .appendSpace()
-                .append(text("seconds!", GRAY));
-        Arg0 RESTARTING = () -> text("[SERVER]", RED)
-                .appendSpace()
-                .append(text("The server is restarting!", GRAY));
-        Arg1<String> CANCELLED = (sender) -> text("[SERVER]", AQUA)
-                .appendSpace()
-                .append(text("The server restart has been cancelled by", GRAY))
-                .appendSpace()
-                .append(text(sender, YELLOW))
-                .append(text("!", GRAY));
-        Arg0 TASK_NOT_FOUND = () -> text("You cannot cancel a restart that is not scheduled!", RED);
+        Arg1<Integer> RESTART = (seconds) -> "&c[SERVER] &7The server will restart in &e" + seconds + "&7 seconds!";
+        Arg0 RESTARTING = () -> "&c[SERVER] &7The server is restarting!";
+        Arg1<String> CANCELLED = (sender) -> "&b[SERVER] &7The server restart has been cancelled by &e" + sender + "&7!";
+        Arg0 TASK_NOT_FOUND = () -> "&cYou cannot cancel a restart that is not scheduled!";
     }
 
     interface Arg0 {
-        Component build();
+        String message();
 
         default void send(CommandSender sender) {
-            sender.sendMessage(build());
+            sender.sendMessage(serialize(message()));
         }
 
         default void broadcast() {
-            for (CommandSender sender : Bukkit.getServer().getOnlinePlayers()) {
-                sender.sendMessage(build());
-            }
+            broadcastAll(() -> serialize(message()));
         }
     }
 
     interface Arg1<A0> {
-        Component build(A0 a0);
+        String message(A0 a0);
 
         default void send(CommandSender sender, A0 a0) {
-            sender.sendMessage(build(a0));
+            sender.sendMessage(message(a0));
         }
 
         default void broadcast(A0 a0) {
-            for (CommandSender sender : Bukkit.getServer().getOnlinePlayers()) {
-                sender.sendMessage(build(a0));
-            }
+            broadcastAll(() -> serialize(message(a0)));
         }
     }
 
+    static @NotNull TextComponent serialize(@NotNull String message) {
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+    }
+
+    static void broadcastAll(Supplier<TextComponent> supplier) {
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(supplier.get()));
+        Bukkit.getConsoleSender().sendMessage(supplier.get());
+    }
 }
