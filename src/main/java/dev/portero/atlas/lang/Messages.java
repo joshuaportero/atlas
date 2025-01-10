@@ -1,5 +1,6 @@
 package dev.portero.atlas.lang;
 
+import dev.portero.atlas.mechanic.MechanicType;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -14,7 +15,7 @@ public interface Messages {
         Arg0 NO_PERMISSION = () -> "&cYou don't have permission to do that!";
 
         interface InvalidUsage {
-            Arg1<String> ONLY_FIRST = (name) -> "&cThe command &e" + name + "&c doesn't support the provided arguments!";
+            Arg1<String> ONLY_FIRST = (cmd) -> "&cThis command doesn't support the provided arguments!";
             Arg1<String> TITLE = (cmd) -> "&cAvailable commands(" + cmd.split(" ")[0] + "):";
             Arg1<String> ARGS = (cmd) -> {
                 String[] args = cmd.split(" ");
@@ -28,6 +29,11 @@ public interface Messages {
                 return builder.toString();
             };
         }
+    }
+
+    interface MechanicCommand {
+        Arg1<MechanicType> ENABLED = (mechanic) -> "&9[MECHANIC] &7The mechanic &e" + mechanic + "&7 is now &aenabled&7!";
+        Arg1<MechanicType> DISABLED = (mechanic) -> "&9[MECHANIC] &7The mechanic &e" + mechanic + "&7 is now &cdisabled&7!";
     }
 
     interface ChatManager {
@@ -79,6 +85,30 @@ public interface Messages {
 
         default void broadcast(A0 a0) {
             broadcastAll(() -> serialize(message(a0)));
+        }
+    }
+
+    interface Arg2<A0, A1> {
+        String message(A0 a0, A1 a1);
+
+        default void send(CommandSender sender, A0 a0, A1 a1) {
+            sender.sendMessage(serialize(message(a0, a1)));
+        }
+
+        default void broadcast(A0 a0, A1 a1) {
+            broadcastAll(() -> serialize(message(a0, a1)));
+        }
+    }
+
+    interface Arg3<A0, A1, A2> {
+        String message(A0 a0, A1 a1, A2 a2);
+
+        default void send(CommandSender sender, A0 a0, A1 a1, A2 a2) {
+            sender.sendMessage(serialize(message(a0, a1, a2)));
+        }
+
+        default void broadcast(A0 a0, A1 a1, A2 a2) {
+            broadcastAll(() -> serialize(message(a0, a1, a2)));
         }
     }
 

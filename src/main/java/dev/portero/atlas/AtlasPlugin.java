@@ -2,10 +2,12 @@ package dev.portero.atlas;
 
 import dev.portero.atlas.cmd.AtlasCMD;
 import dev.portero.atlas.cmd.ChatManagerCMD;
+import dev.portero.atlas.cmd.MechanicCMD;
 import dev.portero.atlas.cmd.RestartCMD;
 import dev.portero.atlas.handler.CustomInvalidUsageHandler;
 import dev.portero.atlas.handler.MissingPermissionHandler;
 import dev.portero.atlas.listener.ChatManagerListener;
+import dev.portero.atlas.listener.mechanic.TntExplodeListener;
 import dev.portero.atlas.manager.ChatManager;
 import dev.portero.atlas.manager.RestartManager;
 import dev.rollczi.litecommands.LiteCommands;
@@ -32,7 +34,8 @@ public class AtlasPlugin extends JavaPlugin {
                 .commands(
                         new AtlasCMD(this),
                         new RestartCMD(this, restartManager),
-                        new ChatManagerCMD(chatManager)
+                        new ChatManagerCMD(chatManager),
+                        new MechanicCMD()
                 )
                 .extension(new LiteAdventureExtension<>(), config -> config
                         .miniMessage(true)
@@ -45,6 +48,7 @@ public class AtlasPlugin extends JavaPlugin {
                 .build();
 
         this.getServer().getPluginManager().registerEvents(new ChatManagerListener(chatManager), this);
+        this.getServer().getPluginManager().registerEvents(new TntExplodeListener(this), this);
     }
 
     @Override

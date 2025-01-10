@@ -1,0 +1,11 @@
+mechanics:
+  tnt_place:
+    enabled: true
+    time: 10
+  tnt_explode:
+    enabled: true
+    time: 10
+    radius: 10
+  tnt_throw:
+    enabled: true
+    time: 10
