@@ -54,7 +54,6 @@ public interface Messages {
         Arg0 DISABLED = () -> "&cYou cannot speak while the chat is disabled!";
 
         Arg1<Integer> SLOWED = (seconds) -> "&cWait &e" + seconds + "&c seconds before sending another message!";
-
     }
 
     interface Restart {
@@ -62,6 +61,7 @@ public interface Messages {
         Arg0 RESTARTING = () -> "&c[SERVER] &7The server is &drestarting&7!";
         Arg1<String> CANCELLED = (sender) -> "&c[SERVER] &7The server &drestart &7has been &ccancelled &7by &e" + sender + "&7!";
         Arg0 TASK_NOT_FOUND = () -> "&cYou cannot cancel a restart that is not scheduled!";
+        Arg0 ALREADY_RUNNING = () -> "&cRestart already in progress! Try /restart cancel!";
     }
 
     interface Arg0 {
