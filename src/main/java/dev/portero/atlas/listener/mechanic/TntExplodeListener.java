@@ -1,7 +1,10 @@
 package dev.portero.atlas.listener.mechanic;
 
 import lombok.RequiredArgsConstructor;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -11,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -25,11 +29,9 @@ public class TntExplodeListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler
     public void onTntExplode(EntityExplodeEvent event) {
-        if (event.getEntity().getType() != EntityType.TNT) {
-            return;
-        }
-
         if (plugin.getConfig().getBoolean("mechanics.tnt_explode.enabled")) {
+            event.setYield(0);
+
             Firework firework = this.spawnFirework(event.getLocation(), FireworkEffect.builder()
                     .with(FireworkEffect.Type.BALL_LARGE)
                     .withColor(Color.RED)
@@ -47,25 +49,36 @@ public class TntExplodeListener implements Listener {
             List<FallingBlock> fallingBlocks = new ArrayList<>();
 
             for (Block block : blocks) {
-                Location location = block.getLocation();
+                Random random = new Random();
+                int chance = random.nextInt(0, 10);
 
-                FallingBlock fallingBlock = location.getWorld().spawnFallingBlock(location, block.getBlockData());
+                if (chance <= 2) {
+                    Location location = block.getLocation();
 
-                fallingBlock.setBlockData(block.getBlockData());
+                    FallingBlock fallingBlock = location.getWorld().spawnFallingBlock(location, block.getBlockData());
 
-                fallingBlock.setVelocity(this.getRandomVelocity());
-                fallingBlock.setDropItem(false);
-                fallingBlock.setInvulnerable(true);
+                    fallingBlock.setBlockData(block.getBlockData());
 
-                fallingBlocks.add(fallingBlock);
+                    fallingBlock.setVelocity(this.getRandomVelocity());
+                    fallingBlock.setDropItem(false);
+                    fallingBlock.setInvulnerable(true);
+
+                    fallingBlocks.add(fallingBlock);
+                }
             }
 
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                for (FallingBlock fallingBlock : fallingBlocks) {
-                    fallingBlock.getLocation().getBlock().setType(Material.AIR);
-                    fallingBlock.remove();
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (fallingBlocks.isEmpty()) {
+                        this.cancel();
+                        return;
+                    }
+
+                    fallingBlocks.getLast().getLocation().getBlock().setType(Material.AIR);
+                    fallingBlocks.removeLast();
                 }
-            }, 5 * 20);
+            }.runTaskTimer(plugin, 20 * 2, 1);
         }
 
     }

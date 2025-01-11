@@ -25,7 +25,7 @@ public class AtlasPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        RestartManager restartManager = new RestartManager();
+        RestartManager restartManager = new RestartManager(this);
         ChatManager chatManager = new ChatManager();
 
         this.loadConfig();
@@ -33,7 +33,7 @@ public class AtlasPlugin extends JavaPlugin {
         this.liteCommands = LiteBukkitFactory.builder("atlas", this)
                 .commands(
                         new AtlasCMD(this),
-                        new RestartCMD(this, restartManager),
+                        new RestartCMD(restartManager),
                         new ChatManagerCMD(chatManager),
                         new MechanicCMD()
                 )
