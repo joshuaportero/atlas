@@ -21,22 +21,22 @@ public class ChatManagerCMD {
     @Execute(name = "slow")
     public void execute(@Context CommandSender sender, @Arg int seconds) {
         if (seconds < 1) {
-            if (chatManager.getSlowModeSeconds() == 0) {
+            if (chatManager.getSlowModeDuration() == 0) {
                 Messages.ChatManager.SLOW_MODE_ALREADY_DISABLED.send(sender);
                 return;
             }
 
-            chatManager.setSlowModeSeconds(0);
+            chatManager.setSlowModeDuration(0);
             Messages.ChatManager.SLOW_MODE_DISABLED.broadcast();
             return;
         }
 
-        if(chatManager.getSlowModeSeconds() == seconds) {
+        if (chatManager.getSlowModeDuration() == seconds) {
             Messages.ChatManager.SLOW_MODE_ALREADY.send(sender, seconds);
             return;
         }
 
-        chatManager.setSlowModeSeconds(seconds);
+        chatManager.setSlowModeDuration(seconds);
         Messages.ChatManager.SLOW_MODE_ENABLED.broadcast(seconds);
     }
 

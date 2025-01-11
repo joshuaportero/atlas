@@ -8,9 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.time.Instant;
-import java.util.Map;
-
 @RequiredArgsConstructor
 public class ChatManagerListener implements Listener {
 
@@ -26,20 +23,18 @@ public class ChatManagerListener implements Listener {
             return;
         }
 
-        if (chatManager.getSlowModeSeconds() > 0) {
-            Map<String, Instant> messageCooldowns = chatManager.getPlayerMessageTimestamps();
-            if (messageCooldowns.containsKey(player.getName())) {
-                Instant lastMessage = messageCooldowns.get(player.getName());
-                long timeSinceLastMessage = System.currentTimeMillis() - lastMessage.toEpochMilli();
-                if (timeSinceLastMessage < chatManager.getSlowModeSeconds() * 1000L) {
-                    event.setCancelled(true);
-                    Messages.ChatManager.SLOWED.send(player, (int) (chatManager.getSlowModeSeconds() - timeSinceLastMessage / 1000L));
+        if (chatManager.getSlowModeDuration() > 0) {
+            if (chatManager.isUserOnCooldown(player.getUniqueId())) {
+                int remainingCooldown = chatManager.getRemainingCooldown(player.getUniqueId());
+                if (remainingCooldown <= 0) {
+                    chatManager.refreshUserCooldown(player.getUniqueId());
                     return;
-                } else {
-                    messageCooldowns.remove(player.getName());
                 }
+                Messages.ChatManager.SLOWED.send(player, remainingCooldown);
+                event.setCancelled(true);
+                return;
             }
-            messageCooldowns.put(player.getName(), Instant.now());
+            chatManager.addUserToCooldown(player.getUniqueId());
         }
     }
 }
