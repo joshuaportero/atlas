@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public interface Messages {
 
@@ -19,14 +21,11 @@ public interface Messages {
             Arg1<String> TITLE = (cmd) -> "&cAvailable commands(" + cmd.split(" ")[0] + "):";
             Arg1<String> ARGS = (cmd) -> {
                 String[] args = cmd.split(" ");
-                StringBuilder builder = new StringBuilder();
-                String[] colors = new String[]{"&7", "&c"};
+                String[] colors = new String[]{"&7", "&c", "&e"};
 
-                builder.append("&8・");
-                for (int i = 0; i < args.length; i++) {
-                    builder.append(colors[i % colors.length]).append(args[i]).append(" ");
-                }
-                return builder.toString();
+                return "&8・" + IntStream.range(0, args.length)
+                        .mapToObj(i -> colors[i % colors.length] + args[i])
+                        .collect(Collectors.joining(" "));
             };
         }
     }
