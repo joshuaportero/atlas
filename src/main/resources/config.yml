@@ -1,11 +1,7 @@
 mechanics:
-  tnt_place:
+  explosion_firework:
     enabled: true
-    time: 10
-  tnt_explode:
+  explosion:
     enabled: true
-    time: 10
-    radius: 10
-  tnt_throw:
+  corpse:
     enabled: true
-    time: 10

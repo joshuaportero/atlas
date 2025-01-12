@@ -1,5 +1,6 @@
 package dev.portero.atlas.listener.mechanic;
 
+import dev.portero.atlas.mechanic.MechanicType;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -29,9 +30,7 @@ public class TntExplodeListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler
     public void onTntExplode(EntityExplodeEvent event) {
-        if (plugin.getConfig().getBoolean("mechanics.tnt_explode.enabled")) {
-            event.setYield(0);
-
+        if (plugin.getConfig().getBoolean(MechanicType.EXPLOSION_FIREWORK.getPath())) {
             Firework firework = this.spawnFirework(event.getLocation(), FireworkEffect.builder()
                     .with(FireworkEffect.Type.BALL_LARGE)
                     .withColor(Color.RED)
@@ -43,8 +42,7 @@ public class TntExplodeListener implements Listener {
             firework.detonate();
         }
 
-        if (plugin.getConfig().getBoolean("mechanics.tnt_explode.enabled")) {
-
+        if (plugin.getConfig().getBoolean(MechanicType.EXPLOSION.getPath())) {
             List<Block> blocks = new ArrayList<>(event.blockList());
             List<FallingBlock> fallingBlocks = new ArrayList<>();
 

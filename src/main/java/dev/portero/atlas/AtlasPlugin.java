@@ -35,7 +35,7 @@ public class AtlasPlugin extends JavaPlugin {
                         new AtlasCMD(this),
                         new RestartCMD(restartManager),
                         new ChatManagerCMD(chatManager),
-                        new MechanicCMD()
+                        new MechanicCMD(this)
                 )
                 .extension(new LiteAdventureExtension<>(), config -> config
                         .miniMessage(true)
