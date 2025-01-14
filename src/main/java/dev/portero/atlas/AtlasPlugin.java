@@ -1,8 +1,15 @@
 package dev.portero.atlas;
 
 import dev.portero.atlas.cmd.AtlasCMD;
+import dev.portero.atlas.cmd.ChatManagerCMD;
+import dev.portero.atlas.cmd.MechanicCMD;
+import dev.portero.atlas.cmd.RestartCMD;
 import dev.portero.atlas.handler.CustomInvalidUsageHandler;
 import dev.portero.atlas.handler.MissingPermissionHandler;
+import dev.portero.atlas.listener.ChatManagerListener;
+import dev.portero.atlas.listener.mechanic.TntExplodeListener;
+import dev.portero.atlas.manager.ChatManager;
+import dev.portero.atlas.manager.RestartManager;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -18,8 +25,18 @@ public class AtlasPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        RestartManager restartManager = new RestartManager(this);
+        ChatManager chatManager = new ChatManager();
+
+        this.loadConfig();
+
         this.liteCommands = LiteBukkitFactory.builder("atlas", this)
-                .commands(new AtlasCMD())
+                .commands(
+                        new AtlasCMD(this),
+                        new RestartCMD(restartManager),
+                        new ChatManagerCMD(chatManager),
+                        new MechanicCMD(this)
+                )
                 .extension(new LiteAdventureExtension<>(), config -> config
                         .miniMessage(true)
                         .legacyColor(true)
@@ -29,6 +46,9 @@ public class AtlasPlugin extends JavaPlugin {
                 .missingPermission(new MissingPermissionHandler())
                 .invalidUsage(new CustomInvalidUsageHandler())
                 .build();
+
+        this.getServer().getPluginManager().registerEvents(new ChatManagerListener(chatManager), this);
+        this.getServer().getPluginManager().registerEvents(new TntExplodeListener(this), this);
     }
 
     @Override
@@ -36,5 +56,10 @@ public class AtlasPlugin extends JavaPlugin {
         if (this.liteCommands != null) {
             this.liteCommands.unregister();
         }
+    }
+
+    private void loadConfig() {
+        this.getConfig().options().copyDefaults(true);
+        this.saveDefaultConfig();
     }
 }

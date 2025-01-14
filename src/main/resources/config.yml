@@ -1,0 +1,7 @@
+mechanics:
+  explosion_firework:
+    enabled: true
+  explosion:
+    enabled: true
+  corpse:
+    enabled: true

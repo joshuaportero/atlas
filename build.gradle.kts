@@ -4,7 +4,7 @@ import xyz.jpenilla.runpaper.task.RunServer
 plugins {
     id("java-library")
     id("com.gradleup.shadow") version "9.0.0-beta4"
-    id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
+    id("de.eldoria.plugin-yml.bukkit") version "0.6.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
@@ -29,9 +29,14 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+
     implementation("org.jetbrains:annotations:24.0.0")
-    implementation("dev.rollczi:litecommands-bukkit:3.9.5")
-    implementation("dev.rollczi:litecommands-adventure:3.9.5")
+    implementation("dev.rollczi:litecommands-bukkit:3.9.6")
+    implementation("dev.rollczi:litecommands-adventure:3.9.6")
+    implementation("dev.triumphteam:triumph-gui:3.1.11")
+
+    compileOnly("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 bukkit {
@@ -53,7 +58,8 @@ tasks.withType<ShadowJar> {
     archiveVersion.set("")
     archiveClassifier.set("")
 
-    relocate("dev.rollczi.litecommands", "dev.portero.atlas.litecommands")
+    relocate("dev.rollczi.litecommands", "dev.portero.atlas.commands")
+    relocate("dev.triumphteam.gui", "dev.portero.atlas.gui")
 }
 
 tasks.withType<RunServer> {
