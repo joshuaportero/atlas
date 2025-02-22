@@ -3,7 +3,7 @@ import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
     id("java-library")
-    id("com.gradleup.shadow") version "9.0.0-beta7"
+    id("com.gradleup.shadow") version "9.0.0-beta8"
     id("de.eldoria.plugin-yml.bukkit") version "0.6.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }

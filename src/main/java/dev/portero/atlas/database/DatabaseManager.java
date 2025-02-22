@@ -1,4 +1,4 @@
-package dev.portero.escape.database;
+package dev.portero.atlas.database;
 
 import com.google.common.base.Stopwatch;
 import com.zaxxer.hikari.HikariDataSource;
@@ -32,32 +32,31 @@ public class DatabaseManager {
 
         this.dataSource.setMaximumPoolSize(5);
 
-        this.dataSource.setUsername(this.config.getString("database.username"));
-        this.dataSource.setPassword(this.config.getString("database.password"));
+        this.dataSource.setUsername(config.getString("database.username"));
+        this.dataSource.setPassword(config.getString("database.password"));
 
         this.dataSource.setDriverClassName("org.postgresql.Driver");
 
-        // Configure the JDBC URL
-        String host = this.config.getString("database.host");
-        String port = this.config.getString("database.port");
-        boolean useSsl = this.config.getBoolean("database.use-ssl");
+        String host = config.getString("database.host");
+        String port = config.getString("database.port");
+        boolean useSsl = config.getBoolean("database.use-ssl");
 
         String url = String.format("jdbc:postgresql://%s:%s/?ssl=%b", host, port, useSsl);
 
         this.dataSource.setJdbcUrl(url);
 
-        this.logger.info("Connecting to the database...");
+        logger.info("Connecting to the database...");
 
         this.dataSource.getConnection();
 
-        this.logger.info("Connected to the database in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
+        logger.info("Connected to the database in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
     }
 
-    public void close() {
+    public void shutdown() {
         try {
             this.dataSource.close();
         } catch (Exception e) {
-            this.logger.log(java.util.logging.Level.SEVERE, "Failed to close the database connection!", e);
+            logger.log(java.util.logging.Level.SEVERE, "Failed to close the database connection!", e);
         }
     }
 }
