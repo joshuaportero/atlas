@@ -48,8 +48,6 @@ public class AtlasPlugin extends JavaPlugin {
         this.scoreboardManager.initialize();
 
         getLogger().info("Atlas has been initialized in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
-        getLogger().info(String.valueOf(Objects.requireNonNull(configManager.getConfig("data.yml"))
-                .getBoolean("example")));
     }
 
     @Override
