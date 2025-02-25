@@ -21,7 +21,7 @@ public class DatabaseManager {
     }
 
     public void connect() throws SQLException {
-        Stopwatch stopwatch = Stopwatch.createStarted();
+        final Stopwatch stopwatch = Stopwatch.createStarted();
 
         this.dataSource = new HikariDataSource();
 
@@ -32,31 +32,31 @@ public class DatabaseManager {
 
         this.dataSource.setMaximumPoolSize(5);
 
-        this.dataSource.setUsername(config.getString("database.username"));
-        this.dataSource.setPassword(config.getString("database.password"));
+        this.dataSource.setUsername(this.config.getString("database.username"));
+        this.dataSource.setPassword(this.config.getString("database.password"));
 
         this.dataSource.setDriverClassName("org.postgresql.Driver");
 
-        String host = config.getString("database.host");
-        String port = config.getString("database.port");
-        boolean useSsl = config.getBoolean("database.use-ssl");
+        String host = this.config.getString("database.host");
+        String port = this.config.getString("database.port");
+        boolean useSsl = this.config.getBoolean("database.use-ssl");
 
         String url = String.format("jdbc:postgresql://%s:%s/?ssl=%b", host, port, useSsl);
 
         this.dataSource.setJdbcUrl(url);
 
-        logger.info("Connecting to the database...");
+        this.logger.info("Connecting to the database...");
 
         this.dataSource.getConnection();
 
-        logger.info("Connected to the database in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
+        this.logger.info("Connected to the database in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
     }
 
     public void shutdown() {
         try {
             this.dataSource.close();
         } catch (Exception e) {
-            logger.log(java.util.logging.Level.SEVERE, "Failed to close the database connection!", e);
+            this.logger.log(java.util.logging.Level.SEVERE, "Failed to close the database connection!", e);
         }
     }
 }

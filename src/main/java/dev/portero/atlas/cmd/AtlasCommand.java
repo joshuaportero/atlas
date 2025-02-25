@@ -6,7 +6,7 @@ import dev.rollczi.litecommands.annotations.execute.Execute;
 import org.bukkit.command.CommandSender;
 
 @Command(name = "atlas")
-public class AtlasCMD {
+public class AtlasCommand {
 
     @Execute
     public void execute(@Context CommandSender sender) {

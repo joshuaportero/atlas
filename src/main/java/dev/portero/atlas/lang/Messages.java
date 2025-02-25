@@ -33,11 +33,11 @@ public interface Messages {
         String message();
 
         default void send(CommandSender sender) {
-            sender.sendMessage(serialize(message()));
+            sender.sendMessage(serialize(this.message()));
         }
 
         default void broadcast() {
-            broadcastAll(() -> serialize(message()));
+            broadcastAll(() -> serialize(this.message()));
         }
     }
 
@@ -45,11 +45,11 @@ public interface Messages {
         String message(A0 a0);
 
         default void send(CommandSender sender, A0 a0) {
-            sender.sendMessage(serialize(message(a0)));
+            sender.sendMessage(serialize(this.message(a0)));
         }
 
         default void broadcast(A0 a0) {
-            broadcastAll(() -> serialize(message(a0)));
+            broadcastAll(() -> serialize(this.message(a0)));
         }
     }
 
@@ -57,11 +57,11 @@ public interface Messages {
         String message(A0 a0, A1 a1);
 
         default void send(CommandSender sender, A0 a0, A1 a1) {
-            sender.sendMessage(serialize(message(a0, a1)));
+            sender.sendMessage(serialize(this.message(a0, a1)));
         }
 
         default void broadcast(A0 a0, A1 a1) {
-            broadcastAll(() -> serialize(message(a0, a1)));
+            broadcastAll(() -> serialize(this.message(a0, a1)));
         }
     }
 
@@ -69,11 +69,11 @@ public interface Messages {
         String message(A0 a0, A1 a1, A2 a2);
 
         default void send(CommandSender sender, A0 a0, A1 a1, A2 a2) {
-            sender.sendMessage(serialize(message(a0, a1, a2)));
+            sender.sendMessage(serialize(this.message(a0, a1, a2)));
         }
 
         default void broadcast(A0 a0, A1 a1, A2 a2) {
-            broadcastAll(() -> serialize(message(a0, a1, a2)));
+            broadcastAll(() -> serialize(this.message(a0, a1, a2)));
         }
     }
 

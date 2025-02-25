@@ -9,7 +9,9 @@ import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
 
 public class AtlasPlugin extends JavaPlugin {
 
@@ -34,23 +36,26 @@ public class AtlasPlugin extends JavaPlugin {
     }
 
     public void initialize() {
-        Stopwatch stopwatch = Stopwatch.createStarted();
+        final Stopwatch stopwatch = Stopwatch.createStarted();
 
         ConfigManager configManager = new ConfigManager(this);
-        configManager.loadConfigurations();
+        configManager.loadConfig("data.yml");
 
         this.commandManager = new CommandManager(this);
+        this.commandManager.register();
 
         this.scoreboardManager = new ScoreboardManager(this);
         this.scoreboardManager.initialize();
 
-        this.getLogger().info("Atlas has been initialized in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
+        getLogger().info("Atlas has been initialized in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
+        getLogger().info(String.valueOf(Objects.requireNonNull(configManager.getConfig("data.yml"))
+                .getBoolean("example")));
     }
 
     @Override
     public void onDisable() {
-        commandManager.unregister();
-        scoreboardManager.shutdown();
-        databaseManager.shutdown();
+        this.commandManager.unregister();
+        this.scoreboardManager.shutdown();
+        this.databaseManager.shutdown();
     }
 }

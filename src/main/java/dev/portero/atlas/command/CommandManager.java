@@ -1,22 +1,25 @@
 package dev.portero.atlas.command;
 
-import dev.portero.atlas.cmd.AtlasCMD;
+import dev.portero.atlas.cmd.AtlasCommand;
 import dev.portero.atlas.handler.CustomInvalidUsageHandler;
 import dev.portero.atlas.handler.MissingPermissionHandler;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
+@RequiredArgsConstructor
 public class CommandManager {
 
-    private final LiteCommands<CommandSender> liteCommands;
+    private final Plugin plugin;
+    private LiteCommands<CommandSender> liteCommands;
 
-    public CommandManager(JavaPlugin plugin) {
-        this.liteCommands = LiteBukkitFactory.builder("atlas", plugin)
-                .commands(new AtlasCMD())
+    public void register() {
+        this.liteCommands = LiteBukkitFactory.builder("atlas", this.plugin)
+                .commands(new AtlasCommand())
                 .extension(new LiteAdventureExtension<>(), config -> config
                         .miniMessage(true)
                         .legacyColor(true)

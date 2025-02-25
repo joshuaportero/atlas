@@ -3,6 +3,7 @@ import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
     id("java-library")
+    id("checkstyle")
     id("com.gradleup.shadow") version "9.0.0-beta8"
     id("de.eldoria.plugin-yml.bukkit") version "0.6.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
@@ -69,7 +70,29 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
+checkstyle {
+    toolVersion = "10.21.3"
+
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    configProperties["checkstyle.suppressions.file"] = "${rootDir}/config/checkstyle/suppressions.xml"
+
+    maxErrors = 0
+    maxWarnings = 0
+}
+
+configurations.named("checkstyle") {
+    resolutionStrategy {
+        capabilitiesResolution {
+            withCapability("com.google.collections:google-collections") {
+                select("com.google.guava:guava:33.4.0-jre")
+            }
+        }
+    }
+}
+
 tasks.withType<ShadowJar> {
+    dependsOn("checkstyleMain")
+
     archiveBaseName.set("Atlas-${project.version}")
     archiveVersion.set("")
     archiveClassifier.set("")
