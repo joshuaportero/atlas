@@ -6,10 +6,10 @@ import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.database.DatabaseManager;
 import dev.portero.atlas.scoreboard.ScoreboardManager;
 import lombok.Getter;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -18,28 +18,26 @@ public class AtlasPlugin extends JavaPlugin {
     private CommandManager commandManager;
 
     @Getter
+    private ConfigManager configManager;
+    @Getter
     private ScoreboardManager scoreboardManager;
     @Getter
     private DatabaseManager databaseManager;
 
     @Override
     public void onEnable() {
-        this.databaseManager = new DatabaseManager(this.getLogger(), this.getConfig());
+        Stopwatch stopwatch = Stopwatch.createStarted();
 
-        try {
-            this.databaseManager.connect();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        // Initialize the plugin
         this.initialize();
+
+        getLogger().info("Atlas has been enabled in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
     }
 
-    public void initialize() {
-        final Stopwatch stopwatch = Stopwatch.createStarted();
-
-        ConfigManager configManager = new ConfigManager(this);
-        configManager.loadConfig("data.yml");
+    private void initialize() {
+        this.configManager = new ConfigManager();
+        this.configManager.loadConfig("data.yml");
+        this.configManager.loadConfig("scoreboard.yml");
 
         this.commandManager = new CommandManager(this);
         this.commandManager.register();
@@ -47,7 +45,13 @@ public class AtlasPlugin extends JavaPlugin {
         this.scoreboardManager = new ScoreboardManager(this);
         this.scoreboardManager.initialize();
 
-        getLogger().info("Atlas has been initialized in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
+        this.databaseManager = new DatabaseManager(this.getLogger(), this.getConfig());
+
+        try {
+            this.databaseManager.connect();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -55,5 +59,13 @@ public class AtlasPlugin extends JavaPlugin {
         this.commandManager.unregister();
         this.scoreboardManager.shutdown();
         this.databaseManager.shutdown();
+    }
+
+    public YamlConfiguration getDataConfig() {
+        return this.configManager.getConfig("data.yml");
+    }
+
+    public YamlConfiguration getScoreboardConfig() {
+        return this.configManager.getConfig("scoreboard.yml");
     }
 }
