@@ -1,56 +1,66 @@
 package dev.portero.atlas.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 
+@Slf4j
 public class FileUtil {
 
-    /**
-     * Creates a file if it doesn't exist and copies default content from the plugin jar if available.
-     *
-     * @param plugin   The plugin instance
-     * @param fileName The name of the file to create
-     * @return The file object, or null if creation failed
-     */
     @Nullable
-    public static File createFileIfNotExists() {
-        return null;
+    public static File createFileIfNotExists(Plugin plugin, String fileName) {
+        // Create plugin data folder if it doesn't exist
+        if (!plugin.getDataFolder().exists() && !plugin.getDataFolder().mkdirs()) {
+            log.error("Could not create plugin data folder");
+            return null;
+        }
+
+        File file = new File(plugin.getDataFolder(), fileName);
+
+        if (!file.exists()) {
+            // Check if resource exists in plugin jar
+            if (plugin.getResource(fileName) != null) {
+                plugin.saveResource(fileName, false);
+                return file;
+            }
+
+            // Create empty file if resource doesn't exist
+            try {
+                if (!file.createNewFile()) {
+                    log.error("Could not create file: {}", fileName);
+                    return null;
+                }
+            } catch (IOException e) {
+                log.error("Error creating file {}: {}", fileName, e.getMessage());
+                return null;
+            }
+        }
+
+        return file;
     }
 
-    /**
-     * Loads a YAML configuration from a file, applying defaults from the plugin's resources if available.
-     *
-     * @param plugin   The plugin instance
-     * @param file     The configuration file
-     * @param fileName The name of the configuration file (for loading defaults)
-     * @return The loaded configuration, or null if loading failed
-     */
     @Nullable
-    public static YamlConfiguration loadYamlConfig() {
-        return null;
+    public static YamlConfiguration loadYamlConfig(File file) {
+        if (file == null || !file.exists()) {
+            return null;
+        }
+
+        return YamlConfiguration.loadConfiguration(file);
     }
 
-    /**
-     * Saves a YAML configuration to disk.
-     *
-     * @param config   The configuration to save
-     * @param file     The file to save to
-     * @param logger   The logger to use for error reporting
-     * @param fileName The name of the file (for logging purposes)
-     */
-    public static void saveYamlConfig() {
+    public static void saveYamlConfig(YamlConfiguration config, File file) {
+        if (config == null || file == null) {
+            return;
+        }
 
-    }
-
-    /**
-     * Ensures the plugin data folder exists.
-     *
-     * @param plugin The plugin instance
-     */
-    public static void ensurePluginFolderExists(Plugin plugin) {
-
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 }
