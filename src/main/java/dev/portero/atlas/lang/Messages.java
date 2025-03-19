@@ -16,11 +16,11 @@ public interface Messages {
         Args0 NO_PERMISSION = () -> "&cYou don't have permission to do that!";
 
         interface InvalidUsage {
-            Args1<String> ONLY_FIRST = (cmd) -> "&cThis command doesn't support the provided arguments!";
-            Args1<String> TITLE = (cmd) -> "&cAvailable commands(" + cmd.split(" ")[0] + "):";
-            Args1<String> ARGS = (cmd) -> {
+            Args1<String> ONLY_FIRST = cmd -> "&cThis command doesn't support the provided arguments!";
+            Args1<String> TITLE = cmd -> "&cAvailable commands(" + cmd.split(" ")[0] + "):";
+            Args1<String> ARGS = cmd -> {
                 String[] args = cmd.split(" ");
-                String[] colors = new String[]{"&7", "&c", "&e"};
+                String[] colors = {"&7", "&c", "&e"};
 
                 return "&8・" + IntStream.range(0, args.length)
                         .mapToObj(i -> colors[i % colors.length] + args[i])
@@ -29,51 +29,61 @@ public interface Messages {
         }
     }
 
-    interface Args0 {
+    interface ArgsBase {
+        default void send(CommandSender sender, Supplier<String> messageSupplier) {
+            sender.sendMessage(serialize(messageSupplier.get()));
+        }
+
+        default void broadcast(Supplier<String> messageSupplier) {
+            broadcastAll(() -> serialize(messageSupplier.get()));
+        }
+    }
+
+    interface Args0 extends ArgsBase {
         String message();
 
         default void send(CommandSender sender) {
-            sender.sendMessage(serialize(this.message()));
+            send(sender, this::message);
         }
 
         default void broadcast() {
-            broadcastAll(() -> serialize(this.message()));
+            broadcast(this::message);
         }
     }
 
-    interface Args1<A0> {
+    interface Args1<A0> extends ArgsBase {
         String message(A0 a0);
 
         default void send(CommandSender sender, A0 a0) {
-            sender.sendMessage(serialize(this.message(a0)));
+            this.send(sender, () -> this.message(a0));
         }
 
         default void broadcast(A0 a0) {
-            broadcastAll(() -> serialize(this.message(a0)));
+            this.broadcast(() -> this.message(a0));
         }
     }
 
-    interface Args2<A0, A1> {
+    interface Args2<A0, A1> extends ArgsBase {
         String message(A0 a0, A1 a1);
 
         default void send(CommandSender sender, A0 a0, A1 a1) {
-            sender.sendMessage(serialize(this.message(a0, a1)));
+            send(sender, () -> this.message(a0, a1));
         }
 
         default void broadcast(A0 a0, A1 a1) {
-            broadcastAll(() -> serialize(this.message(a0, a1)));
+            broadcast(() -> this.message(a0, a1));
         }
     }
 
-    interface Args3<A0, A1, A2> {
+    interface Args3<A0, A1, A2> extends ArgsBase {
         String message(A0 a0, A1 a1, A2 a2);
 
         default void send(CommandSender sender, A0 a0, A1 a1, A2 a2) {
-            sender.sendMessage(serialize(this.message(a0, a1, a2)));
+            send(sender, () -> this.message(a0, a1, a2));
         }
 
         default void broadcast(A0 a0, A1 a1, A2 a2) {
-            broadcastAll(() -> serialize(this.message(a0, a1, a2)));
+            broadcast(() -> this.message(a0, a1, a2));
         }
     }
 
@@ -82,7 +92,8 @@ public interface Messages {
     }
 
     static void broadcastAll(Supplier<TextComponent> supplier) {
-        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(supplier.get()));
-        Bukkit.getConsoleSender().sendMessage(supplier.get());
+        TextComponent message = supplier.get();
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(message));
+        Bukkit.getConsoleSender().sendMessage(message);
     }
 }
