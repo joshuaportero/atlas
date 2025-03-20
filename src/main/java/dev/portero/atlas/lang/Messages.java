@@ -29,6 +29,14 @@ public interface Messages {
         }
     }
 
+    interface GameMode {
+        Args1<String> SELF = player -> "&7Your game mode has been changed to &e" + player + "&7.";
+        Args2<String, String> TARGET = (target, gamemode) -> "&7You have changed &e" + target
+                + "'s &7game mode to &e" + gamemode + "&7.";
+        Args2<String, String> TARGET_SELF = (gamemode, player) -> "&7Your game mode has been changed to &e"
+                + gamemode + "&7 by &e" + player + "&7.";
+    }
+
     interface ArgsBase {
         default void send(CommandSender sender, Supplier<String> messageSupplier) {
             sender.sendMessage(serialize(messageSupplier.get()));
