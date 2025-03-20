@@ -6,7 +6,6 @@ import dev.portero.atlas.config.ConfigType;
 import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.database.DatabaseManager;
 import dev.portero.atlas.scoreboard.ScoreboardManager;
-import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,12 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class AtlasPlugin extends JavaPlugin {
 
     private CommandManager commandManager;
-
-    @Getter
-    private ConfigManager configManager;
-    @Getter
     private ScoreboardManager scoreboardManager;
-    @Getter
     private DatabaseManager databaseManager;
 
     @Override
@@ -36,10 +30,11 @@ public class AtlasPlugin extends JavaPlugin {
     }
 
     private void initialize() {
-        this.configManager = new ConfigManager(this);
+        ConfigManager configManager = new ConfigManager(this);
 
+        // Load all configuration files
         for (ConfigType configType : ConfigType.values()) {
-            this.configManager.loadConfig(configType);
+            configManager.loadConfig(configType);
         }
 
         this.commandManager = new CommandManager(this);
@@ -48,7 +43,7 @@ public class AtlasPlugin extends JavaPlugin {
         this.scoreboardManager = new ScoreboardManager(this);
         this.scoreboardManager.initialize();
 
-        YamlConfiguration config = this.configManager.getConfig(ConfigType.DEFAULT);
+        YamlConfiguration config = configManager.getConfig(ConfigType.DEFAULT);
         this.databaseManager = new DatabaseManager(config);
 
         try {
