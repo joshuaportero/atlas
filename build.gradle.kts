@@ -4,8 +4,8 @@ import xyz.jpenilla.runpaper.task.RunServer
 plugins {
     id("java-library")
     id("checkstyle")
-    id("com.gradleup.shadow") version "9.0.0-beta8"
-    id("de.eldoria.plugin-yml.bukkit") version "0.6.0"
+    id("com.gradleup.shadow") version "9.0.0-beta11"
+    id("de.eldoria.plugin-yml.bukkit") version "0.7.1"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
@@ -36,8 +36,6 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     compileOnly("org.jetbrains:annotations:24.0.0")
-
-    implementation("com.github.retrooper:packetevents-spigot:2.7.0")
 
     implementation("dev.rollczi:litecommands-bukkit:3.9.6")
     implementation("dev.rollczi:litecommands-adventure:3.9.6")
@@ -71,7 +69,7 @@ tasks.withType<JavaCompile> {
 }
 
 checkstyle {
-    toolVersion = "10.21.3"
+    toolVersion = "10.21.4"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     configProperties["checkstyle.suppressions.file"] = "${rootDir}/config/checkstyle/suppressions.xml"
@@ -93,17 +91,10 @@ configurations.named("checkstyle") {
 tasks.withType<ShadowJar> {
     dependsOn("checkstyleMain")
 
-    archiveBaseName.set("Atlas-${project.version}")
-    archiveVersion.set("")
-    archiveClassifier.set("")
-
     relocate("dev.rollczi.litecommands", "dev.portero.atlas.libs.commands")
     relocate("dev.triumphteam.gui", "dev.portero.atlas.libs.gui")
 
     relocate("de.exlll.config", "dev.portero.atlas.libs.configuration")
-
-    relocate("com.github.retrooper.packetevents", "dev.portero.atlas.libs.packetevents.api")
-    relocate("io.github.retrooper.packetevents", "dev.portero.atlas.libs.packetevents.impl")
 
     relocate("net.megavex.scoreboardlibrary", "dev.portero.atlas.libs.scorelib")
 
@@ -113,6 +104,10 @@ tasks.withType<ShadowJar> {
         exclude(dependency("net.megavex:scoreboard-library-modern"))
         exclude(dependency("org.postgresql:postgresql"))
     }
+
+    archiveBaseName.set("Atlas-${project.version}")
+    archiveVersion.set("")
+    archiveClassifier.set("")
 }
 
 tasks.withType<RunServer> {
