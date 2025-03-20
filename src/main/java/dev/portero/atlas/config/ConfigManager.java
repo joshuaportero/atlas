@@ -16,57 +16,57 @@ import java.util.Map;
 public class ConfigManager {
 
     private final Plugin plugin;
-    private final Map<Config, YamlConfiguration> configs = new EnumMap<>(Config.class);
+    private final Map<ConfigType, YamlConfiguration> configs = new EnumMap<>(ConfigType.class);
 
-    public void loadConfig(Config config) {
-        File file = FileUtil.createFileIfNotExists(this.plugin, config.getFileName());
+    public void loadConfig(ConfigType configType) {
+        File file = FileUtil.createFileIfNotExists(this.plugin, configType.getFileName());
         if (file == null) {
-            log.error("Failed to create or access {}", config.getFileName());
+            log.error("Failed to create or access {}", configType.getFileName());
             return;
         }
 
         YamlConfiguration yamlConfig = FileUtil.loadYamlConfig(file);
         if (yamlConfig == null) {
-            log.error("Failed to load configuration {}", config.getFileName());
+            log.error("Failed to load configuration {}", configType.getFileName());
             return;
         }
 
-        this.configs.put(config, yamlConfig);
-        log.info("Successfully loaded {}", config.getFileName());
+        this.configs.put(configType, yamlConfig);
+        log.info("Successfully loaded {}", configType.getFileName());
     }
 
     @Nullable
-    public YamlConfiguration getConfig(Config config) {
-        return this.configs.get(config);
+    public YamlConfiguration getConfig(ConfigType configType) {
+        return this.configs.get(configType);
     }
 
-    public void saveConfig(Config config) {
-        YamlConfiguration yamlConfig = this.configs.get(config);
+    public void saveConfig(ConfigType configType) {
+        YamlConfiguration yamlConfig = this.configs.get(configType);
         if (yamlConfig == null) {
-            log.warn("Attempted to save non-loaded config: {}", config.getFileName());
+            log.warn("Attempted to save non-loaded config: {}", configType.getFileName());
             return;
         }
 
-        File file = new File(this.plugin.getDataFolder(), config.getFileName());
+        File file = new File(this.plugin.getDataFolder(), configType.getFileName());
         FileUtil.saveYamlConfig(yamlConfig, file);
-        log.info("Saved configuration {}", config.getFileName());
+        log.info("Saved configuration {}", configType.getFileName());
     }
 
-    public void reloadConfig(Config config) {
-        this.loadConfig(config);
-        log.info("Reloaded configuration {}", config.getFileName());
+    public void reloadConfig(ConfigType configType) {
+        this.loadConfig(configType);
+        log.info("Reloaded configuration {}", configType.getFileName());
     }
 
     public void saveAll() {
-        for (Config config : this.configs.keySet()) {
-            this.saveConfig(config);
+        for (ConfigType configType : this.configs.keySet()) {
+            this.saveConfig(configType);
         }
         log.info("Saved all configurations");
     }
 
     public void reloadAll() {
-        for (Config config : Config.values()) {
-            this.reloadConfig(config);
+        for (ConfigType configType : ConfigType.values()) {
+            this.reloadConfig(configType);
         }
         log.info("Reloaded all configurations");
     }

@@ -3,13 +3,14 @@ package dev.portero.atlas.config;
 import lombok.Getter;
 
 @Getter
-public enum Config {
+public enum ConfigType {
+    SCOREBOARD("scoreboard.yml"),
     DATA("data.yml"),
-    SCOREBOARD("scoreboard.yml");
+    DEFAULT("config.yml"),;
 
     private final String fileName;
 
-    Config(String fileName) {
+    ConfigType(String fileName) {
         this.fileName = fileName;
     }
 }

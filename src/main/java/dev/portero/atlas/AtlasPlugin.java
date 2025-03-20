@@ -2,7 +2,7 @@ package dev.portero.atlas;
 
 import com.google.common.base.Stopwatch;
 import dev.portero.atlas.command.CommandManager;
-import dev.portero.atlas.config.Config;
+import dev.portero.atlas.config.ConfigType;
 import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.database.DatabaseManager;
 import dev.portero.atlas.scoreboard.ScoreboardManager;
@@ -38,8 +38,8 @@ public class AtlasPlugin extends JavaPlugin {
     private void initialize() {
         this.configManager = new ConfigManager(this);
 
-        for (Config config : Config.values()) {
-            this.configManager.loadConfig(config);
+        for (ConfigType configType : ConfigType.values()) {
+            this.configManager.loadConfig(configType);
         }
 
         this.commandManager = new CommandManager(this);
@@ -48,7 +48,8 @@ public class AtlasPlugin extends JavaPlugin {
         this.scoreboardManager = new ScoreboardManager(this);
         this.scoreboardManager.initialize();
 
-        this.databaseManager = new DatabaseManager(this.getLogger(), this.getConfig());
+        YamlConfiguration config = this.configManager.getConfig(ConfigType.DEFAULT);
+        this.databaseManager = new DatabaseManager(config);
 
         try {
             this.databaseManager.connect();
@@ -62,9 +63,5 @@ public class AtlasPlugin extends JavaPlugin {
         this.commandManager.unregister();
         this.scoreboardManager.shutdown();
         this.databaseManager.shutdown();
-    }
-
-    public YamlConfiguration getConfig(Config config) {
-        return this.configManager.getConfig(config);
     }
 }

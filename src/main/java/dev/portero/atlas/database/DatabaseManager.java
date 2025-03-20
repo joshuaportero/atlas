@@ -2,21 +2,20 @@ package dev.portero.atlas.database;
 
 import com.google.common.base.Stopwatch;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
+@Slf4j
 public class DatabaseManager {
 
-    private final Logger logger;
     private final FileConfiguration config;
 
     private HikariDataSource dataSource;
 
-    public DatabaseManager(Logger logger, FileConfiguration config) {
-        this.logger = logger;
+    public DatabaseManager(FileConfiguration config) {
         this.config = config;
     }
 
@@ -45,18 +44,18 @@ public class DatabaseManager {
 
         this.dataSource.setJdbcUrl(url);
 
-        this.logger.info("Connecting to the database...");
+        log.info("Connecting to the database...");
 
         this.dataSource.getConnection();
 
-        this.logger.info("Connected to the database in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
+        log.info("Connected to the database in {}ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     public void shutdown() {
         try {
             this.dataSource.close();
         } catch (Exception e) {
-            this.logger.log(java.util.logging.Level.SEVERE, "Failed to close the database connection!", e);
+            log.error("Failed to close the database connection!", e);
         }
     }
 }
