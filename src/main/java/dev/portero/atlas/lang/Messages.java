@@ -37,6 +37,10 @@ public interface Messages {
                 + gamemode + "&7 by &e" + player + "&7.";
     }
 
+    interface Do {
+        Args2<String, String> EXECUTE = (player, message) -> "&7[&bDO&7] [&d" + player + "&7]: &f" + message;
+    }
+
     interface ArgsBase {
         default void send(CommandSender sender, Supplier<String> messageSupplier) {
             sender.sendMessage(serialize(messageSupplier.get()));

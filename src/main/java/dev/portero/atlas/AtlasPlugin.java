@@ -2,8 +2,8 @@ package dev.portero.atlas;
 
 import com.google.common.base.Stopwatch;
 import dev.portero.atlas.command.CommandManager;
-import dev.portero.atlas.config.ConfigType;
 import dev.portero.atlas.config.ConfigManager;
+import dev.portero.atlas.config.ConfigType;
 import dev.portero.atlas.database.DatabaseManager;
 import dev.portero.atlas.scoreboard.ScoreboardManager;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,7 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
-
 
 public class AtlasPlugin extends JavaPlugin {
 
@@ -26,7 +25,7 @@ public class AtlasPlugin extends JavaPlugin {
         // Initialize the plugin
         this.initialize();
 
-        getLogger().info("Atlas has been enabled in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms.");
+        getLogger().info("Atlas has been enabled in %dms.".formatted(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
     }
 
     private void initialize() {

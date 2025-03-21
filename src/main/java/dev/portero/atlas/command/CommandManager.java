@@ -1,6 +1,7 @@
 package dev.portero.atlas.command;
 
 import dev.portero.atlas.cmd.AtlasCommand;
+import dev.portero.atlas.cmd.DoCommand;
 import dev.portero.atlas.cmd.GameModeCommand;
 import dev.portero.atlas.handler.CustomInvalidUsageHandler;
 import dev.portero.atlas.handler.MissingPermissionHandler;
@@ -20,7 +21,7 @@ public class CommandManager {
 
     public void register() {
         this.liteCommands = LiteBukkitFactory.builder("atlas", this.plugin)
-                .commands(new AtlasCommand(), new GameModeCommand())
+                .commands(new AtlasCommand(), new GameModeCommand(), new DoCommand())
                 .extension(new LiteAdventureExtension<>(), config -> config
                         .miniMessage(true)
                         .legacyColor(true)
