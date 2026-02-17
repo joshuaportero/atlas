@@ -3,20 +3,21 @@ package dev.portero.atlas.database;
 import com.google.common.base.Stopwatch;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class DatabaseManager {
 
-    private final FileConfiguration config;
+    private final File dataFolder;
 
     private HikariDataSource dataSource;
 
-    public DatabaseManager(FileConfiguration config) {
-        this.config = config;
+    public DatabaseManager(File dataFolder) {
+
+        this.dataFolder = dataFolder;
     }
 
     public void connect() throws SQLException {
@@ -24,23 +25,11 @@ public class DatabaseManager {
 
         this.dataSource = new HikariDataSource();
 
-        this.dataSource.addDataSourceProperty("cachePrepStmts", true);
-        this.dataSource.addDataSourceProperty("prepStmtCacheSize", 250);
-        this.dataSource.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
-        this.dataSource.addDataSourceProperty("useServerPrepStmts", true);
+        this.dataSource.setDriverClassName("org.sqlite.JDBC");
 
-        this.dataSource.setMaximumPoolSize(5);
+        File databaseFile = new File(this.dataFolder, "database.db");
 
-        this.dataSource.setUsername(this.config.getString("database.username"));
-        this.dataSource.setPassword(this.config.getString("database.password"));
-
-        this.dataSource.setDriverClassName("org.postgresql.Driver");
-
-        String host = this.config.getString("database.host");
-        String port = this.config.getString("database.port");
-        boolean useSsl = this.config.getBoolean("database.use-ssl");
-
-        String url = String.format("jdbc:postgresql://%s:%s/?ssl=%b", host, port, useSsl);
+        String url = "jdbc:sqlite:" + databaseFile.getAbsolutePath();
 
         this.dataSource.setJdbcUrl(url);
 

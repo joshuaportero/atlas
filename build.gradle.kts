@@ -4,9 +4,9 @@ import xyz.jpenilla.runpaper.task.RunServer
 plugins {
     id("java-library")
     id("checkstyle")
-    id("com.gradleup.shadow") version "9.0.0-beta11"
-    id("de.eldoria.plugin-yml.bukkit") version "0.7.1"
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("com.gradleup.shadow") version "9.3.1"
+    id("de.eldoria.plugin-yml.bukkit") version "0.8.0"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 group = "dev.portero.atlas"
@@ -33,31 +33,32 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
-    compileOnly("org.jetbrains:annotations:24.0.0")
+    compileOnly("org.jetbrains:annotations:26.0.2")
 
-    implementation("dev.rollczi:litecommands-bukkit:3.9.6")
-    implementation("dev.rollczi:litecommands-adventure:3.9.6")
+    implementation("dev.rollczi:litecommands-bukkit:3.10.9")
+    implementation("dev.rollczi:litecommands-adventure:3.10.9")
 
-    implementation("dev.triumphteam:triumph-gui:3.1.11")
+    implementation("dev.triumphteam:triumph-gui:3.1.13")
 
-    implementation("net.megavex:scoreboard-library-api:2.2.2")
-    runtimeOnly("net.megavex:scoreboard-library-implementation:2.2.2")
+    implementation("net.megavex:scoreboard-library-api:2.4.4")
+    runtimeOnly("net.megavex:scoreboard-library-implementation:2.4.4")
 
-    runtimeOnly("net.megavex:scoreboard-library-modern:2.2.2")
+    runtimeOnly("net.megavex:scoreboard-library-modern:2.4.4")
 
-    compileOnly("org.projectlombok:lombok:1.18.36")
-    annotationProcessor("org.projectlombok:lombok:1.18.36")
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
-    implementation("com.zaxxer:HikariCP:6.2.1")
-    implementation("org.postgresql:postgresql:42.7.5")
+    implementation("com.zaxxer:HikariCP:7.0.2")
+    implementation("org.xerial:sqlite-jdbc:3.45.1.0")
 }
 
 bukkit {
     main = "dev.portero.atlas.AtlasPlugin"
     version = project.version.toString()
-    apiVersion = "1.21.4"
+    name = "Atlas"
+    apiVersion = "1.21.11"
     description = "Atlas is the core RPG plugin for quests, combat, progression, and world events."
     website = "https://joshua.portero.dev/"
     authors = listOf("Portero")
@@ -69,7 +70,7 @@ tasks.withType<JavaCompile> {
 }
 
 checkstyle {
-    toolVersion = "10.21.4"
+    toolVersion = "13.2.0"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     configProperties["checkstyle.suppressions.file"] = "${rootDir}/config/checkstyle/suppressions.xml"
@@ -82,7 +83,7 @@ configurations.named("checkstyle") {
     resolutionStrategy {
         capabilitiesResolution {
             withCapability("com.google.collections:google-collections") {
-                select("com.google.guava:guava:33.4.0-jre")
+                select("com.google.guava:guava:33.5.0-jre")
             }
         }
     }
@@ -102,7 +103,6 @@ tasks.withType<ShadowJar> {
         exclude(dependency("net.megavex:scoreboard-library-api"))
         exclude(dependency("net.megavex:scoreboard-library-implementation"))
         exclude(dependency("net.megavex:scoreboard-library-modern"))
-        exclude(dependency("org.postgresql:postgresql"))
     }
 
     archiveBaseName.set("Atlas-${project.version}")
@@ -111,5 +111,5 @@ tasks.withType<ShadowJar> {
 }
 
 tasks.withType<RunServer> {
-    minecraftVersion("1.21.4")
+    minecraftVersion("1.21.11")
 }

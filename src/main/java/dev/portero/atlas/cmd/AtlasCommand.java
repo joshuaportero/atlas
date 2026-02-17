@@ -12,6 +12,6 @@ public class AtlasCommand {
 
     @Execute
     public void execute(@Context CommandSender sender) {
-        sender.sendMessage(MessageUtil.centerDecorated(NamedTextColor.GRAY, "[ &c&lINFO &7]"));
+        sender.sendMessage(MessageUtil.centerDecorated(NamedTextColor.GRAY, "&7[ &c&lINFO &7]"));
     }
 }

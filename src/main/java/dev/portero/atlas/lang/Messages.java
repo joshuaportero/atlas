@@ -20,7 +20,7 @@ public interface Messages {
             Args1<String> TITLE = cmd -> "&cAvailable commands(" + cmd.split(" ")[0] + "):";
             Args1<String> ARGS = cmd -> {
                 String[] args = cmd.split(" ");
-                String[] colors = {"&7", "&c", "&e"};
+                String[] colors = { "&7", "&c", "&e" };
 
                 return "&8・" + IntStream.range(0, args.length)
                         .mapToObj(i -> colors[i % colors.length] + args[i])
@@ -29,12 +29,13 @@ public interface Messages {
         }
     }
 
-    interface GameMode {
-        Args1<String> SELF = player -> "&7Your game mode has been changed to &e" + player + "&7.";
-        Args2<String, String> TARGET = (target, gamemode) -> "&7You have changed &e" + target
-                + "'s &7game mode to &e" + gamemode + "&7.";
-        Args2<String, String> TARGET_SELF = (gamemode, player) -> "&7Your game mode has been changed to &e"
-                + gamemode + "&7 by &e" + player + "&7.";
+    interface Mechanic {
+        Args1<String> ENABLED = name -> "&aMechanic &e" + name + " &ahas been enabled!";
+        Args1<String> DISABLED = name -> "&cMechanic &e" + name + " &chas been disabled!";
+        Args0 LIST_HEADER = () -> "&8&m----------------[&r &6Mechanics &8&m]----------------";
+        Args2<String, Boolean> LIST_ITEM = (name, enabled) -> " &8- &e" + name + " &8(&" + (enabled ? "a" : "c")
+                + (enabled ? "enabled" : "disabled") + "&8)";
+        Args0 RELOADED = () -> "&aMechanics configuration reloaded!";
     }
 
     interface ArgsBase {
