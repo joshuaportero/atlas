@@ -1,0 +1,106 @@
+# Atlas Zombies - gun definitions. All vanilla items; sounds are vanilla sound keys.
+# damage       - per pellet/ray
+# boxWeight    - mystery box weight (0 = not in the box)
+# starting     - given to every player when round 1 starts
+
+m1911:
+  displayName: "&fM1911"
+  material: IRON_HOE
+  damage: 8
+  headshotMultiplier: 1.5
+  fireIntervalMillis: 250
+  magazine: 8
+  reserve: 80
+  reloadMillis: 1200
+  spreadDegrees: 1.0
+  recoilPitch: 1.2
+  range: 50
+  fireSound: entity.firework_rocket.blast
+  soundPitch: 1.8
+  starting: true
+  boxWeight: 10
+
+m1_garand:
+  displayName: "&eM1 Garand"
+  material: CROSSBOW
+  damage: 14
+  headshotMultiplier: 2.0
+  fireIntervalMillis: 350
+  magazine: 8
+  reserve: 96
+  reloadMillis: 1600
+  spreadDegrees: 0.6
+  recoilPitch: 1.8
+  range: 60
+  fireSound: entity.generic.explode
+  soundPitch: 1.6
+  boxWeight: 10
+
+thompson:
+  displayName: "&6Thompson"
+  material: IRON_SHOVEL
+  damage: 6
+  headshotMultiplier: 1.5
+  fireIntervalMillis: 120
+  magazine: 20
+  reserve: 200
+  reloadMillis: 1800
+  spreadDegrees: 2.2
+  recoilPitch: 0.8
+  range: 45
+  fireSound: entity.firework_rocket.blast
+  soundPitch: 1.4
+  boxWeight: 10
+
+trench_gun:
+  displayName: "&cTrench Gun"
+  material: BLAZE_ROD
+  damage: 6
+  pellets: 8
+  headshotMultiplier: 1.25
+  fireIntervalMillis: 900
+  magazine: 6
+  reserve: 48
+  reloadMillis: 2400
+  spreadDegrees: 6.0
+  recoilPitch: 3.0
+  range: 25
+  fireSound: entity.generic.explode
+  soundPitch: 1.2
+  boxWeight: 8
+
+kar98k:
+  displayName: "&bKar98k"
+  material: SPYGLASS
+  # Plain right-click keeps the vanilla spyglass scope; sneak + right-click fires.
+  aimDownSights: true
+  damage: 40
+  headshotMultiplier: 2.5
+  fireIntervalMillis: 1300
+  magazine: 5
+  reserve: 50
+  reloadMillis: 2600
+  spreadDegrees: 0.1
+  recoilPitch: 4.0
+  range: 100
+  fireSound: entity.generic.explode
+  soundPitch: 0.9
+  boxWeight: 8
+
+ray_gun:
+  displayName: "&dRay Gun"
+  material: AMETHYST_SHARD
+  projectile: true
+  damage: 50
+  aoeRadius: 3.5
+  headshotMultiplier: 1.0
+  fireIntervalMillis: 500
+  magazine: 20
+  reserve: 160
+  reloadMillis: 2000
+  spreadDegrees: 0.0
+  recoilPitch: 1.5
+  range: 60
+  fireSound: entity.blaze.shoot
+  soundPitch: 1.5
+  boxWeight: 2

@@ -4,7 +4,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -29,15 +29,6 @@ public interface Messages {
         }
     }
 
-    interface Mechanic {
-        Args1<String> ENABLED = name -> "&aMechanic &e" + name + " &ahas been enabled!";
-        Args1<String> DISABLED = name -> "&cMechanic &e" + name + " &chas been disabled!";
-        Args0 LIST_HEADER = () -> "&8&m----------------[&r &6Mechanics &8&m]----------------";
-        Args2<String, Boolean> LIST_ITEM = (name, enabled) -> " &8- &e" + name + " &8(&" + (enabled ? "a" : "c")
-                + (enabled ? "enabled" : "disabled") + "&8)";
-        Args0 RELOADED = () -> "&aMechanics configuration reloaded!";
-    }
-
     interface ArgsBase {
         default void send(CommandSender sender, Supplier<String> messageSupplier) {
             sender.sendMessage(serialize(messageSupplier.get()));
@@ -52,11 +43,11 @@ public interface Messages {
         String message();
 
         default void send(CommandSender sender) {
-            send(sender, this::message);
+            this.send(sender, this::message);
         }
 
         default void broadcast() {
-            broadcast(this::message);
+            this.broadcast(this::message);
         }
     }
 
@@ -76,27 +67,16 @@ public interface Messages {
         String message(A0 a0, A1 a1);
 
         default void send(CommandSender sender, A0 a0, A1 a1) {
-            send(sender, () -> this.message(a0, a1));
+            this.send(sender, () -> this.message(a0, a1));
         }
 
         default void broadcast(A0 a0, A1 a1) {
-            broadcast(() -> this.message(a0, a1));
+            this.broadcast(() -> this.message(a0, a1));
         }
     }
 
-    interface Args3<A0, A1, A2> extends ArgsBase {
-        String message(A0 a0, A1 a1, A2 a2);
 
-        default void send(CommandSender sender, A0 a0, A1 a1, A2 a2) {
-            send(sender, () -> this.message(a0, a1, a2));
-        }
-
-        default void broadcast(A0 a0, A1 a1, A2 a2) {
-            broadcast(() -> this.message(a0, a1, a2));
-        }
-    }
-
-    static @NotNull TextComponent serialize(@NotNull String message) {
+    static @NonNull TextComponent serialize(@NonNull String message) {
         return LegacyComponentSerializer.legacyAmpersand().deserialize(message);
     }
 

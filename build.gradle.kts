@@ -4,8 +4,8 @@ import xyz.jpenilla.runpaper.task.RunServer
 plugins {
     id("java-library")
     id("checkstyle")
-    id("com.gradleup.shadow") version "9.3.1"
-    id("de.eldoria.plugin-yml.bukkit") version "0.8.0"
+    id("com.gradleup.shadow") version "9.5.1"
+    id("de.eldoria.plugin-yml.bukkit") version "0.9.0"
     id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
@@ -13,10 +13,11 @@ group = "dev.portero.atlas"
 version = "0.0.1-DEV"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 repositories {
+    mavenCentral()
     maven {
         name = "PaperMC"
         url = uri("https://repo.papermc.io/repository/maven-public/")
@@ -29,39 +30,48 @@ repositories {
         name = "CodeMC"
         url = uri("https://repo.codemc.io/repository/maven-releases/")
     }
-    mavenCentral()
+    maven {
+        name = "EngineHub"
+        url = uri("https://maven.enginehub.org/repo/")
+    }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
 
-    compileOnly("org.jetbrains:annotations:26.0.2")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.4.5")
 
-    implementation("dev.rollczi:litecommands-bukkit:3.10.9")
-    implementation("dev.rollczi:litecommands-adventure:3.10.9")
+    compileOnly("org.jetbrains:annotations:26.1.0")
+
+    implementation("dev.rollczi:litecommands-bukkit:3.11.0")
+    implementation("dev.rollczi:litecommands-adventure:3.11.0")
 
     implementation("dev.triumphteam:triumph-gui:3.1.13")
 
-    implementation("net.megavex:scoreboard-library-api:2.4.4")
-    runtimeOnly("net.megavex:scoreboard-library-implementation:2.4.4")
+    implementation("net.megavex:scoreboard-library-api:2.8.0")
+    runtimeOnly("net.megavex:scoreboard-library-implementation:2.8.0")
 
-    runtimeOnly("net.megavex:scoreboard-library-modern:2.4.4")
+    compileOnly("org.projectlombok:lombok:1.18.46")
+    annotationProcessor("org.projectlombok:lombok:1.18.46")
 
-    compileOnly("org.projectlombok:lombok:1.18.42")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
+    implementation("com.zaxxer:HikariCP:7.1.0")
+    implementation("org.postgresql:postgresql:42.7.13")
 
-    implementation("com.zaxxer:HikariCP:7.0.2")
-    implementation("org.xerial:sqlite-jdbc:3.45.1.0")
+    testCompileOnly("io.papermc.paper:paper-api:26.2.build.+")
+    testRuntimeOnly("io.papermc.paper:paper-api:26.2.build.+")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
+    testImplementation("org.mockito:mockito-core:5.18.0")
 }
 
 bukkit {
     main = "dev.portero.atlas.AtlasPlugin"
     version = project.version.toString()
-    name = "Atlas"
-    apiVersion = "1.21.11"
+    apiVersion = "26.2"
     description = "Atlas is the core RPG plugin for quests, combat, progression, and world events."
     website = "https://joshua.portero.dev/"
     authors = listOf("Portero")
+    softDepend = listOf("WorldEdit", "FastAsyncWorldEdit")
 }
 
 tasks.withType<JavaCompile> {
@@ -69,8 +79,12 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 checkstyle {
-    toolVersion = "13.2.0"
+    toolVersion = "13.8.0"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     configProperties["checkstyle.suppressions.file"] = "${rootDir}/config/checkstyle/suppressions.xml"
@@ -83,7 +97,7 @@ configurations.named("checkstyle") {
     resolutionStrategy {
         capabilitiesResolution {
             withCapability("com.google.collections:google-collections") {
-                select("com.google.guava:guava:33.5.0-jre")
+                select("com.google.guava:guava:33.6.0-jre")
             }
         }
     }
@@ -102,7 +116,7 @@ tasks.withType<ShadowJar> {
     minimize {
         exclude(dependency("net.megavex:scoreboard-library-api"))
         exclude(dependency("net.megavex:scoreboard-library-implementation"))
-        exclude(dependency("net.megavex:scoreboard-library-modern"))
+        exclude(dependency("org.postgresql:postgresql"))
     }
 
     archiveBaseName.set("Atlas-${project.version}")
@@ -111,5 +125,5 @@ tasks.withType<ShadowJar> {
 }
 
 tasks.withType<RunServer> {
-    minecraftVersion("1.21.11")
+    minecraftVersion("26.2")
 }

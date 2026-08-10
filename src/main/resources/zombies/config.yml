@@ -1,0 +1,74 @@
+# Atlas Zombies - global game tuning. Per-arena data lives in zombies/arenas/<id>.yml.
+
+# Seconds between min-players reached (or /za start) and round 1.
+countdownSeconds: 10
+
+# Seconds between clearing a round and the next round starting.
+intermissionSeconds: 10
+
+# Chunk columns pasted per tick when restoring an arena after a game.
+# Lower this if restores cause lag on slow hardware.
+restoreChunksPerTick: 4
+
+points:
+  kill: 90
+  hit: 10
+  # Points per rebuilt barricade plank.
+  repair: 10
+
+window:
+  # One plank is torn per window per this many ticks (while a zombie presses against it).
+  breakIntervalTicks: 40
+  # Delay between two plank repairs while a player sneaks next to the window.
+  repairCooldownMillis: 400
+  # How close a sneaking player must be to the window for repairs to progress.
+  repairReach: 4.0
+  # A zombie within this distance of a window blocks all repairs on it.
+  zombieBlockReach: 3.5
+
+door:
+  # Seconds a player has to confirm a door purchase with a second click.
+  confirmSeconds: 3
+
+downed:
+  # Seconds until a downed player bleeds out.
+  bleedoutSeconds: 30
+  # Seconds a teammate must sneak next to a downed player to revive them.
+  reviveSeconds: 5
+  # Seconds until Quick Revive picks a solo player back up.
+  selfReviveSeconds: 5
+  # How close the reviver must crouch to the downed player.
+  reviveReach: 2.5
+
+powerups:
+  # Chance per zombie kill to drop a power-up.
+  dropChance: 0.03
+  # Duration of timed power-ups (insta-kill, double points).
+  durationSeconds: 30
+  # Seconds a dropped power-up waits to be picked up.
+  despawnSeconds: 20
+  # Walk-through pickup distance.
+  pickupReach: 1.3
+
+round:
+  # Zombies in round 1.
+  baseZombies: 6
+  # Extra zombies added per round.
+  perRound: 2
+  # Extra zombies per additional player beyond the first.
+  perExtraPlayer: 3
+  # Max zombies alive at once; the rest stays queued.
+  maxAlive: 24
+  # Ticks between spawns in round 1; shrinks by 1 per round (min 5).
+  spawnIntervalTicks: 20
+  # Zombie max health = 20 * (1 + (round - 1) * this value).
+  healthMultiplierPerRound: 0.15
+  # Vanilla zombie speed is ~0.23.
+  baseSpeed: 0.23
+  sprintSpeed: 0.30
+  # From this round on, zombies can spawn as sprinters.
+  sprinterFromRound: 5
+  # Sprinter chance grows by this per round...
+  sprinterChanceStep: 0.05
+  # ...and never exceeds this.
+  sprinterChanceMax: 0.6

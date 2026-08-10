@@ -1,0 +1,26 @@
+# Atlas Zombies - perk (drink) definitions. Effects are applied in code per perk id.
+
+# Max perks a player can hold at once.
+maxPerks: 4
+
+perks:
+  juggernog:
+    displayName: "&4Juggernog"
+    price: 2500
+  speed_cola:
+    displayName: "&bSpeed Cola"
+    price: 3000
+  quick_revive:
+    displayName: "&aQuick Revive"
+    price: 1500
+    # Price in a solo game (grants one self-revive per bleed-out).
+    soloPrice: 500
+  double_tap:
+    displayName: "&6Double Tap Root Beer"
+    price: 2000
+  stamin_up:
+    displayName: "&eStamin-Up"
+    price: 2000
+  deadshot:
+    displayName: "&cDeadshot Daiquiri"
+    price: 1500
