@@ -4,9 +4,9 @@ import xyz.jpenilla.runpaper.task.RunServer
 plugins {
     id("java-library")
     id("checkstyle")
-    id("com.gradleup.shadow") version "9.5.1"
+    id("com.gradleup.shadow") version "9.6.1"
     id("de.eldoria.plugin-yml.bukkit") version "0.9.0"
-    id("xyz.jpenilla.run-paper") version "3.0.2"
+    id("xyz.jpenilla.run-paper") version "3.1.0"
 }
 
 group = "dev.portero.atlas"
