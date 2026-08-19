@@ -48,6 +48,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:7.1.0")
     implementation("org.postgresql:postgresql:42.7.13")
+    implementation("org.xerial:sqlite-jdbc:3.53.2.1")
 }
 
 bukkit {
@@ -94,6 +95,7 @@ tasks.withType<ShadowJar> {
         exclude(dependency("net.megavex:scoreboard-library-api"))
         exclude(dependency("net.megavex:scoreboard-library-implementation"))
         exclude(dependency("org.postgresql:postgresql"))
+        exclude(dependency("org.xerial:sqlite-jdbc"))
     }
 
     archiveBaseName.set("Atlas-${project.version}")

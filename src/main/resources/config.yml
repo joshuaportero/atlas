@@ -1,6 +1,9 @@
 database:
+  type: sqlite
+  file: atlas.db
   host: localhost
   port: 5432
+  name: atlas
   username: atlas
   password: atlasPassword
   use-ssl: false

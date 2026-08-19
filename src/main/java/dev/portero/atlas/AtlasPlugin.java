@@ -39,7 +39,11 @@ public class AtlasPlugin extends JavaPlugin {
         this.scoreboardManager.initialize();
 
         YamlConfiguration config = configManager.getConfig(ConfigType.DEFAULT);
-        this.databaseManager = new DatabaseManager(config);
+        if (config == null) {
+            throw new IllegalStateException("Failed to load config.yml");
+        }
+
+        this.databaseManager = new DatabaseManager(this, config);
 
         try {
             this.databaseManager.connect();
