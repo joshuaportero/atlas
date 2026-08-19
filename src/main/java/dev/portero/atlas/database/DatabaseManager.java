@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class DatabaseManager {
 
     private final FileConfiguration config;
-
     private HikariDataSource dataSource;
 
     public DatabaseManager(FileConfiguration config) {
@@ -46,16 +45,16 @@ public class DatabaseManager {
 
         log.info("Connecting to the database...");
 
-        this.dataSource.getConnection();
-
-        log.info("Connected to the database in {}ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        try (var ignored = this.dataSource.getConnection()) {
+            log.info("Connected to the database in {}ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 
     public void shutdown() {
-        try {
-            this.dataSource.close();
-        } catch (Exception e) {
-            log.error("Failed to close the database connection!", e);
+        if (this.dataSource == null || this.dataSource.isClosed()) {
+            return;
         }
+
+        this.dataSource.close();
     }
 }
