@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ConfigType {
     SCOREBOARD("scoreboard.yml"),
     DATA("data.yml"),
-    DEFAULT("config.yml"),;
+    DEFAULT("config.yml");
 
     private final String fileName;
 
