@@ -7,3 +7,6 @@ database:
   username: atlas
   password: atlasPassword
   use-ssl: false
+
+data:
+  autosave-seconds: 300

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +54,7 @@ public class DatabaseManager {
 
         hikariConfig.setJdbcUrl("jdbc:sqlite:" + databaseFile.getAbsolutePath());
         hikariConfig.setMaximumPoolSize(1);
-        hikariConfig.setConnectionInitSql("PRAGMA journal_mode=WAL;");
+        hikariConfig.setConnectionInitSql("PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;");
         hikariConfig.setConnectionTestQuery("SELECT 1");
     }
 
@@ -71,6 +72,13 @@ public class DatabaseManager {
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", 250);
         hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
         hikariConfig.addDataSourceProperty("useServerPrepStmts", true);
+    }
+
+    public DataSource getDataSource() {
+        if (this.dataSource == null || this.dataSource.isClosed()) {
+            throw new IllegalStateException("Database is not connected");
+        }
+        return this.dataSource;
     }
 
     public void shutdown() {
