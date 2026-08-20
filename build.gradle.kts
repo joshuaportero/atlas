@@ -29,6 +29,10 @@ repositories {
         url = uri("https://repo.panda-lang.org/releases")
     }
     mavenCentral()
+    maven {
+        name = "ExtendedClip"
+        url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    }
 }
 
 dependencies {
@@ -49,6 +53,8 @@ dependencies {
     implementation("com.zaxxer:HikariCP:7.1.0")
     implementation("org.postgresql:postgresql:42.7.13")
     implementation("org.xerial:sqlite-jdbc:3.53.2.1")
+    implementation("com.mysql:mysql-connector-j:9.4.0")
+    compileOnly("me.clip:placeholderapi:2.11.6")
 }
 
 bukkit {
@@ -58,6 +64,7 @@ bukkit {
     description = "Atlas is the core RPG plugin for quests, combat(skills), mmo, progression, and world events."
     website = "https://joshua.portero.dev/"
     authors = listOf("Portero")
+    softDepend = listOf("PlaceholderAPI")
 }
 
 tasks.withType<JavaCompile> {
@@ -96,6 +103,7 @@ tasks.withType<ShadowJar> {
         exclude(dependency("net.megavex:scoreboard-library-implementation"))
         exclude(dependency("org.postgresql:postgresql"))
         exclude(dependency("org.xerial:sqlite-jdbc"))
+        exclude(dependency("com.mysql:mysql-connector-j"))
     }
 
     archiveBaseName.set("Atlas-${project.version}")

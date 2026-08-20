@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DatabaseType {
     SQLITE("org.sqlite.JDBC"),
-    POSTGRES("org.postgresql.Driver");
+    POSTGRES("org.postgresql.Driver"),
+    MYSQL("com.mysql.cj.jdbc.Driver");
 
     private final String driverClassName;
 
@@ -19,6 +20,7 @@ public enum DatabaseType {
         return switch (value.toLowerCase()) {
             case "sqlite" -> SQLITE;
             case "postgres", "postgresql" -> POSTGRES;
+            case "mysql", "mariadb" -> MYSQL;
             default -> throw new IllegalArgumentException("Unknown database type: " + value);
         };
     }

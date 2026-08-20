@@ -10,3 +10,28 @@ database:
 
 data:
   autosave-seconds: 300
+
+stats:
+  defaults:
+    strength: 0
+    defense: 0
+    crit_chance: 0.05
+    crit_damage: 0.5
+    attack_damage: 1
+    magic_power: 0
+    max_health: 20
+    max_mana: 100
+    max_stamina: 100
+    max_energy: 100
+
+resources:
+  tick-interval: 20
+  mana:
+    regen-per-second: 2
+  stamina:
+    regen-per-second: 5
+  energy:
+    regen-per-second: 3
+
+combat:
+  enabled: true

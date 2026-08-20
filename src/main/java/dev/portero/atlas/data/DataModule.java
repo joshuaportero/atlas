@@ -52,8 +52,11 @@ public final class DataModule implements AtlasModule {
 
         new MigrationService(executor, List.of(new ProfileSchemaMigration())).migrate();
 
+        DatabaseManager database = context.service(DatabaseManager.class);
         ProfileRepository profiles = new SqlProfileRepository(
-                executor, context.service(ProfileComponentRegistry.class));
+                executor,
+                context.service(ProfileComponentRegistry.class),
+                SqlDialect.from(database.getType()));
         context.services().register(ProfileRepository.class, profiles);
 
         this.lifecycle = new DataLifecycleService(

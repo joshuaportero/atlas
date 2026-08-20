@@ -1,5 +1,6 @@
 package dev.portero.atlas.data.profile;
 
+import dev.portero.atlas.data.SqlDialect;
 import dev.portero.atlas.data.SqlExecutor;
 
 import java.sql.Connection;
@@ -16,10 +17,13 @@ public final class SqlProfileRepository implements ProfileRepository {
 
     private final SqlExecutor executor;
     private final ProfileComponentRegistry components;
+    private final SqlDialect dialect;
 
-    public SqlProfileRepository(SqlExecutor executor, ProfileComponentRegistry components) {
+    public SqlProfileRepository(SqlExecutor executor, ProfileComponentRegistry components,
+                                SqlDialect dialect) {
         this.executor = executor;
         this.components = components;
+        this.dialect = dialect;
     }
 
     @Override
@@ -119,13 +123,7 @@ public final class SqlProfileRepository implements ProfileRepository {
     }
 
     private void persist(Connection connection, Profile profile) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("""
-                INSERT INTO atlas_profile (unique_id, name, created_at, updated_at)
-                VALUES (?, ?, ?, ?)
-                ON CONFLICT(unique_id) DO UPDATE SET
-                    name = excluded.name,
-                    updated_at = excluded.updated_at
-                """)) {
+        try (PreparedStatement statement = connection.prepareStatement(this.dialect.upsertProfile())) {
             statement.setString(1, profile.uniqueId().toString());
             statement.setString(2, profile.name());
             statement.setLong(3, profile.createdAt());
@@ -143,12 +141,7 @@ public final class SqlProfileRepository implements ProfileRepository {
             return;
         }
 
-        try (PreparedStatement upsert = connection.prepareStatement("""
-                INSERT INTO atlas_profile_component (unique_id, component_key, payload)
-                VALUES (?, ?, ?)
-                ON CONFLICT(unique_id, component_key) DO UPDATE SET
-                    payload = excluded.payload
-                """)) {
+        try (PreparedStatement upsert = connection.prepareStatement(this.dialect.upsertComponent())) {
             for (ProfileComponent component : attached) {
                 upsert.setString(1, profile.uniqueId().toString());
                 upsert.setString(2, component.key());

@@ -17,6 +17,7 @@ public class DatabaseManager {
 
     private final Plugin plugin;
     private final FileConfiguration config;
+    private DatabaseType type;
     private HikariDataSource dataSource;
 
     public DatabaseManager(Plugin plugin, FileConfiguration config) {
@@ -26,24 +27,25 @@ public class DatabaseManager {
 
     public void connect() throws SQLException {
         final Stopwatch stopwatch = Stopwatch.createStarted();
-        DatabaseType type = DatabaseType.fromConfig(this.config.getString("database.type"));
+        this.type = DatabaseType.fromConfig(this.config.getString("database.type"));
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setPoolName("Atlas");
-        hikariConfig.setDriverClassName(type.getDriverClassName());
+        hikariConfig.setDriverClassName(this.type.getDriverClassName());
 
-        switch (type) {
+        switch (this.type) {
             case SQLITE -> this.configureSqlite(hikariConfig);
             case POSTGRES -> this.configurePostgres(hikariConfig);
-            default -> throw new IllegalStateException("Unexpected database type: " + type);
+            case MYSQL -> this.configureMysql(hikariConfig);
+            default -> throw new IllegalStateException("Unexpected database type: " + this.type);
         }
 
         this.dataSource = new HikariDataSource(hikariConfig);
 
-        log.info("Connecting to {}...", type.name().toLowerCase());
+        log.info("Connecting to {}...", this.type.name().toLowerCase());
 
         try (var ignored = this.dataSource.getConnection()) {
-            log.info("Connected to {} in {}ms.", type.name().toLowerCase(),
+            log.info("Connected to {} in {}ms.", this.type.name().toLowerCase(),
                     stopwatch.elapsed(TimeUnit.MILLISECONDS));
         }
     }
@@ -72,6 +74,31 @@ public class DatabaseManager {
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", 250);
         hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
         hikariConfig.addDataSourceProperty("useServerPrepStmts", true);
+    }
+
+    private void configureMysql(HikariConfig hikariConfig) {
+        String host = this.config.getString("database.host", "localhost");
+        String port = this.config.getString("database.port", "3306");
+        String name = this.config.getString("database.name", "atlas");
+        boolean useSsl = this.config.getBoolean("database.use-ssl");
+
+        hikariConfig.setJdbcUrl(String.format(
+                "jdbc:mysql://%s:%s/%s?useSSL=%b&allowPublicKeyRetrieval=true",
+                host, port, name, useSsl));
+        hikariConfig.setUsername(this.config.getString("database.username"));
+        hikariConfig.setPassword(this.config.getString("database.password"));
+        hikariConfig.setMaximumPoolSize(5);
+        hikariConfig.addDataSourceProperty("cachePrepStmts", true);
+        hikariConfig.addDataSourceProperty("prepStmtCacheSize", 250);
+        hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
+        hikariConfig.addDataSourceProperty("useServerPrepStmts", true);
+    }
+
+    public DatabaseType getType() {
+        if (this.type == null) {
+            throw new IllegalStateException("Database is not connected");
+        }
+        return this.type;
     }
 
     public DataSource getDataSource() {

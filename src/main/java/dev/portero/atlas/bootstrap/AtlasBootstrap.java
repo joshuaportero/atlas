@@ -3,11 +3,16 @@ package dev.portero.atlas.bootstrap;
 import dev.portero.atlas.command.CommandManager;
 import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.config.ConfigType;
+import dev.portero.atlas.combat.CombatModule;
 import dev.portero.atlas.data.DataModule;
 import dev.portero.atlas.database.DatabaseManager;
 import dev.portero.atlas.event.EventBus;
 import dev.portero.atlas.pipeline.PipelineRegistry;
+import dev.portero.atlas.placeholder.PlaceholderModule;
+import dev.portero.atlas.player.PlayerModule;
+import dev.portero.atlas.resource.ResourceModule;
 import dev.portero.atlas.scheduler.AtlasScheduler;
+import dev.portero.atlas.stat.StatModule;
 import dev.portero.atlas.scoreboard.ScoreboardManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -71,6 +76,11 @@ public final class AtlasBootstrap {
 
         this.modules = new ModuleRegistry(new ModuleContext(this.plugin, this.services));
         this.modules.register(new DataModule());
+        this.modules.register(new PlayerModule());
+        this.modules.register(new StatModule());
+        this.modules.register(new ResourceModule());
+        this.modules.register(new CombatModule());
+        this.modules.register(new PlaceholderModule());
         this.modules.loadAll();
         this.modules.enableAll();
     }
