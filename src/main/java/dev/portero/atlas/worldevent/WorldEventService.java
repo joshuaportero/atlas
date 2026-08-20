@@ -1,5 +1,8 @@
 package dev.portero.atlas.worldevent;
 
+import dev.portero.atlas.event.EventBus;
+import dev.portero.atlas.event.WorldEventStartedEvent;
+import dev.portero.atlas.event.WorldEventStoppedEvent;
 import dev.portero.atlas.player.AtlasPlayer;
 import dev.portero.atlas.player.ProfileManager;
 import dev.portero.atlas.player.SettingsComponent;
@@ -22,11 +25,14 @@ public final class WorldEventService {
     private final ProfileManager profiles;
     private final StatManager stats;
     private final AtlasScheduler scheduler;
+    private final EventBus events;
 
-    public WorldEventService(ProfileManager profiles, StatManager stats, AtlasScheduler scheduler) {
+    public WorldEventService(ProfileManager profiles, StatManager stats, AtlasScheduler scheduler,
+                             EventBus events) {
         this.profiles = profiles;
         this.stats = stats;
         this.scheduler = scheduler;
+        this.events = events;
     }
 
     public void register(WorldEventDefinition definition) {
@@ -62,6 +68,7 @@ public final class WorldEventService {
         this.profiles.online().forEach(player -> this.apply(player, definition));
         long delayTicks = Math.max(20L, TimeUnit.MILLISECONDS.toSeconds(definition.defaultDurationMillis()) * 20L);
         this.scheduler.syncLater(delayTicks, () -> this.stop(id));
+        this.events.publish(new WorldEventStartedEvent(definition));
         log.info("Started world event {}", id);
         return true;
     }
@@ -72,6 +79,7 @@ public final class WorldEventService {
             return false;
         }
         this.profiles.online().forEach(player -> this.stats.removeModifiers(player, "event:" + id));
+        this.events.publish(new WorldEventStoppedEvent(removed.definition()));
         log.info("Stopped world event {}", id);
         return true;
     }

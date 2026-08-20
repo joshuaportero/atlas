@@ -45,7 +45,7 @@ public final class PlayerHubMenu extends AtlasMenu {
                         "&7Equip up to 3 passive skills", "&eClick to open"))
                 .onClick(context -> context.open(this.menus.skillMenu())));
         view.set(20, MenuItem.of(ItemFactory.of(Material.WRITABLE_BOOK, "&aQuests",
-                        "&7Pin notes or abandon quest states", "&eClick to open"))
+                        "&7Accept and track quests", "&eClick to open"))
                 .onClick(context -> context.open(this.menus.questMenu())));
         view.set(22, MenuItem.of(ItemFactory.of(Material.NETHER_STAR, "&6Events",
                         "&7Opt in or out of world events", "&eClick to open"))
@@ -53,6 +53,9 @@ public final class PlayerHubMenu extends AtlasMenu {
         view.set(24, MenuItem.of(ItemFactory.of(Material.SHIELD, "&cCombat",
                         "&7Toggle hit feedback", "&eClick to open"))
                 .onClick(context -> context.open(this.menus.combatSettingsMenu())));
+        view.set(28, MenuItem.of(ItemFactory.of(Material.WHITE_BANNER, "&dParty",
+                        "&7Create or manage your party", "&eClick to open"))
+                .onClick(context -> context.open(this.menus.partyMenu())));
         view.set(30, MenuItem.of(ItemFactory.of(Material.CLOCK, "&eCooldowns",
                         "&7Track remaining ability timers", "&eClick to open"))
                 .onClick(context -> context.open(this.menus.cooldownMenu())));

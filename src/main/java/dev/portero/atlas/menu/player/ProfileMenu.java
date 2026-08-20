@@ -34,9 +34,11 @@ public final class ProfileMenu extends AtlasMenu {
         AtlasPlayer atlas = this.menus.atlas(view.player());
         String party = atlas.partyId().map(id -> id.toString().substring(0, 8)).orElse("None");
         view.border(MenuItem.of(ItemFactory.pane()));
+        int level = this.menus.levels().level(atlas);
         view.set(13, MenuItem.of(ItemFactory.skull(view.player(), "&e" + atlas.name(),
-                "&7Id: &f" + atlas.uniqueId(),
-                "&7Created: &f" + atlas.profile().createdAt(),
+                "&7Level: &f" + level,
+                "&7XP: &f" + this.menus.levels().xp(atlas) + "/"
+                        + this.menus.levels().xpForNext(level),
                 "&7Absorption: &f" + String.format("%.0f", atlas.absorption()),
                 "&7Party: &f" + party)));
         view.set(20, MenuItem.of(ItemFactory.of(Material.GOLDEN_APPLE, "&eDischarge Absorption",
@@ -50,7 +52,7 @@ public final class ProfileMenu extends AtlasMenu {
                         "&7Current: &f" + party,
                         "&eClick to clear your party id"))
                 .onClick(context -> {
-                    atlas.partyId(null);
+                    this.menus.parties().leave(atlas.uniqueId(), true);
                     context.refresh();
                 }));
         view.set(24, MenuItem.of(ItemFactory.of(Material.NAME_TAG, "&eRefresh Name",

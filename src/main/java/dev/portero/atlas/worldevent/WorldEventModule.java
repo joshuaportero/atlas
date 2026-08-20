@@ -2,6 +2,7 @@ package dev.portero.atlas.worldevent;
 
 import dev.portero.atlas.bootstrap.AtlasModule;
 import dev.portero.atlas.bootstrap.ModuleContext;
+import dev.portero.atlas.event.EventBus;
 import dev.portero.atlas.pipeline.PipelineRegistry;
 import dev.portero.atlas.pipeline.PlayerReadyContext;
 import dev.portero.atlas.player.ProfileManager;
@@ -27,7 +28,8 @@ public final class WorldEventModule implements AtlasModule {
         WorldEventService events = new WorldEventService(
                 context.service(ProfileManager.class),
                 context.service(StatManager.class),
-                context.service(AtlasScheduler.class));
+                context.service(AtlasScheduler.class),
+                context.service(EventBus.class));
 
         StatRegistry stats = context.service(StatRegistry.class);
         long fiveMinutes = TimeUnit.MINUTES.toMillis(5);
@@ -45,6 +47,9 @@ public final class WorldEventModule implements AtlasModule {
                 List.of(
                         new StatModifier("event", stats.require("magic_power"), ModifierOperation.FLAT, 20),
                         new StatModifier("event", stats.require("max_mana"), ModifierOperation.FLAT, 40))));
+        events.register(new WorldEventDefinition("koth", "King of the Hill",
+                "Capture the hill and hold it to score points.", Material.GOLDEN_HELMET,
+                fiveMinutes, List.of()));
 
         context.services().register(WorldEventService.class, events);
         context.service(PipelineRegistry.class)

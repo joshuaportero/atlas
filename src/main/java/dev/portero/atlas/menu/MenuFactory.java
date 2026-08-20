@@ -3,6 +3,7 @@ package dev.portero.atlas.menu;
 import dev.portero.atlas.combat.CombatManager;
 import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.database.DatabaseManager;
+import dev.portero.atlas.level.LevelService;
 import dev.portero.atlas.menu.admin.AdminCombatMenu;
 import dev.portero.atlas.menu.admin.AdminEventMenu;
 import dev.portero.atlas.menu.admin.AdminHubMenu;
@@ -16,6 +17,7 @@ import dev.portero.atlas.menu.api.AtlasMenu;
 import dev.portero.atlas.menu.player.CombatSettingsMenu;
 import dev.portero.atlas.menu.player.CooldownMenu;
 import dev.portero.atlas.menu.player.EventMenu;
+import dev.portero.atlas.menu.player.PartyMenu;
 import dev.portero.atlas.menu.player.PlayerHubMenu;
 import dev.portero.atlas.menu.player.PlayerSettingsMenu;
 import dev.portero.atlas.menu.player.ProfileMenu;
@@ -23,9 +25,11 @@ import dev.portero.atlas.menu.player.QuestMenu;
 import dev.portero.atlas.menu.player.ResourceMenu;
 import dev.portero.atlas.menu.player.SkillMenu;
 import dev.portero.atlas.menu.player.StatMenu;
+import dev.portero.atlas.party.PartyService;
 import dev.portero.atlas.player.AtlasPlayer;
 import dev.portero.atlas.player.ProfileManager;
 import dev.portero.atlas.player.SettingsComponent;
+import dev.portero.atlas.quest.QuestService;
 import dev.portero.atlas.resource.ResourceManager;
 import dev.portero.atlas.skill.SkillService;
 import dev.portero.atlas.stat.StatManager;
@@ -42,10 +46,14 @@ public final class MenuFactory {
     private final WorldEventService events;
     private final ConfigManager configs;
     private final DatabaseManager database;
+    private final PartyService parties;
+    private final QuestService quests;
+    private final LevelService levels;
 
     public MenuFactory(ProfileManager profiles, StatManager stats, ResourceManager resources,
                        CombatManager combat, SkillService skills, WorldEventService events,
-                       ConfigManager configs, DatabaseManager database) {
+                       ConfigManager configs, DatabaseManager database, PartyService parties,
+                       QuestService quests, LevelService levels) {
         this.profiles = profiles;
         this.stats = stats;
         this.resources = resources;
@@ -54,6 +62,9 @@ public final class MenuFactory {
         this.events = events;
         this.configs = configs;
         this.database = database;
+        this.parties = parties;
+        this.quests = quests;
+        this.levels = levels;
     }
 
     public ProfileManager profiles() {
@@ -86,6 +97,18 @@ public final class MenuFactory {
 
     public DatabaseManager database() {
         return this.database;
+    }
+
+    public PartyService parties() {
+        return this.parties;
+    }
+
+    public QuestService quests() {
+        return this.quests;
+    }
+
+    public LevelService levels() {
+        return this.levels;
     }
 
     public AtlasPlayer atlas(Player player) {
@@ -137,6 +160,10 @@ public final class MenuFactory {
 
     public AtlasMenu settingsMenu() {
         return new PlayerSettingsMenu(this);
+    }
+
+    public AtlasMenu partyMenu() {
+        return new PartyMenu(this);
     }
 
     public AtlasMenu adminHub() {

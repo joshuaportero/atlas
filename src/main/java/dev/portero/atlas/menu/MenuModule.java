@@ -5,9 +5,12 @@ import dev.portero.atlas.bootstrap.ModuleContext;
 import dev.portero.atlas.combat.CombatManager;
 import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.database.DatabaseManager;
+import dev.portero.atlas.level.LevelService;
 import dev.portero.atlas.menu.api.MenuListener;
 import dev.portero.atlas.menu.api.MenuService;
+import dev.portero.atlas.party.PartyService;
 import dev.portero.atlas.player.ProfileManager;
+import dev.portero.atlas.quest.QuestService;
 import dev.portero.atlas.resource.ResourceManager;
 import dev.portero.atlas.scheduler.AtlasScheduler;
 import dev.portero.atlas.skill.SkillService;
@@ -34,7 +37,10 @@ public final class MenuModule implements AtlasModule {
                 context.service(SkillService.class),
                 context.service(WorldEventService.class),
                 context.service(ConfigManager.class),
-                context.service(DatabaseManager.class)));
+                context.service(DatabaseManager.class),
+                context.service(PartyService.class),
+                context.service(QuestService.class),
+                context.service(LevelService.class)));
     }
 
     @Override

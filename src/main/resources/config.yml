@@ -35,3 +35,12 @@ resources:
 
 combat:
   enabled: true
+
+leveling:
+  max-level: 50
+  base-xp: 100
+  points-per-level: 2
+
+koth:
+  radius: 8
+  xp-reward: 250

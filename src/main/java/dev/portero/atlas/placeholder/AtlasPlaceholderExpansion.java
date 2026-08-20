@@ -1,5 +1,6 @@
 package dev.portero.atlas.placeholder;
 
+import dev.portero.atlas.level.LevelService;
 import dev.portero.atlas.player.AtlasPlayer;
 import dev.portero.atlas.player.ProfileManager;
 import dev.portero.atlas.resource.ResourceManager;
@@ -19,13 +20,16 @@ public final class AtlasPlaceholderExpansion extends PlaceholderExpansion {
     private final ProfileManager profiles;
     private final StatManager stats;
     private final ResourceManager resources;
+    private final LevelService levels;
 
     public AtlasPlaceholderExpansion(Plugin plugin, ProfileManager profiles,
-                                     StatManager stats, ResourceManager resources) {
+                                     StatManager stats, ResourceManager resources,
+                                     LevelService levels) {
         this.plugin = plugin;
         this.profiles = profiles;
         this.stats = stats;
         this.resources = resources;
+        this.levels = levels;
     }
 
     @Override
@@ -79,6 +83,12 @@ public final class AtlasPlaceholderExpansion extends PlaceholderExpansion {
 
         if ("name".equals(params)) {
             return player.name();
+        }
+        if ("level".equals(params)) {
+            return Integer.toString(this.levels.level(player));
+        }
+        if ("xp".equals(params)) {
+            return Long.toString(this.levels.xp(player));
         }
         return "";
     }
