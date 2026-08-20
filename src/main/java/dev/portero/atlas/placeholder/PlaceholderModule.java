@@ -2,6 +2,7 @@ package dev.portero.atlas.placeholder;
 
 import dev.portero.atlas.bootstrap.AtlasModule;
 import dev.portero.atlas.bootstrap.ModuleContext;
+import dev.portero.atlas.level.LevelService;
 import dev.portero.atlas.player.ProfileManager;
 import dev.portero.atlas.resource.ResourceManager;
 import dev.portero.atlas.stat.StatManager;
@@ -26,7 +27,8 @@ public final class PlaceholderModule implements AtlasModule {
                 context.plugin(),
                 context.service(ProfileManager.class),
                 context.service(StatManager.class),
-                context.service(ResourceManager.class)).register();
+                context.service(ResourceManager.class),
+                context.service(LevelService.class)).register();
         log.info("Registered PlaceholderAPI expansion (%atlas_%)");
     }
 }

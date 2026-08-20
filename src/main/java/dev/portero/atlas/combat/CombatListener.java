@@ -22,7 +22,8 @@ public final class CombatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (this.combat.applying() || !(event.getEntity() instanceof LivingEntity)) {
+        if (!this.combat.enabled() || this.combat.applying()
+                || !(event.getEntity() instanceof LivingEntity)) {
             return;
         }
 

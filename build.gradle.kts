@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
     id("java-library")
@@ -33,6 +34,10 @@ repositories {
         name = "ExtendedClip"
         url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     }
+    maven {
+        name = "FancyInnovations"
+        url = uri("https://repo.fancyinnovations.com/releases")
+    }
 }
 
 dependencies {
@@ -41,8 +46,6 @@ dependencies {
 
     implementation("dev.rollczi:litecommands-bukkit:$liteCommandsVersion")
     implementation("dev.rollczi:litecommands-adventure:$liteCommandsVersion")
-
-    implementation("dev.triumphteam:triumph-gui:3.1.13")
 
     implementation("net.megavex:scoreboard-library-api:$scoreboardLibraryVersion")
     runtimeOnly("net.megavex:scoreboard-library-implementation:$scoreboardLibraryVersion")
@@ -55,6 +58,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.53.2.1")
     implementation("com.mysql:mysql-connector-j:9.4.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("de.oliver:FancyHolograms:2.10.0")
 }
 
 bukkit {
@@ -64,7 +68,17 @@ bukkit {
     description = "Atlas is the core RPG plugin for quests, combat(skills), mmo, progression, and world events."
     website = "https://joshua.portero.dev/"
     authors = listOf("Portero")
-    softDepend = listOf("PlaceholderAPI")
+    softDepend = listOf("PlaceholderAPI", "FancyHolograms")
+    permissions {
+        register("atlas.menu") {
+            description = "Open the Atlas player menu"
+            default = BukkitPluginDescription.Permission.Default.TRUE
+        }
+        register("atlas.admin") {
+            description = "Open the Atlas admin menu"
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+    }
 }
 
 tasks.withType<JavaCompile> {
@@ -95,7 +109,6 @@ tasks.withType<ShadowJar> {
     dependsOn("checkstyleMain")
 
     relocate("dev.rollczi.litecommands", "dev.portero.atlas.libs.commands")
-    relocate("dev.triumphteam.gui", "dev.portero.atlas.libs.gui")
     relocate("net.megavex.scoreboardlibrary", "dev.portero.atlas.libs.scorelib")
 
     minimize {

@@ -1,5 +1,13 @@
 package dev.portero.atlas.bootstrap;
 
+import dev.portero.atlas.cmd.AtlasCommand;
+import dev.portero.atlas.cmd.GameModeCommand;
+import dev.portero.atlas.cmd.KothCommand;
+import dev.portero.atlas.cmd.LevelCommand;
+import dev.portero.atlas.cmd.PartyCommand;
+import dev.portero.atlas.cmd.QuestCommand;
+import dev.portero.atlas.cmd.SettingsCommand;
+import dev.portero.atlas.cmd.SkillCommand;
 import dev.portero.atlas.command.CommandManager;
 import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.config.ConfigType;
@@ -7,13 +15,29 @@ import dev.portero.atlas.combat.CombatModule;
 import dev.portero.atlas.data.DataModule;
 import dev.portero.atlas.database.DatabaseManager;
 import dev.portero.atlas.event.EventBus;
+import dev.portero.atlas.koth.KothModule;
+import dev.portero.atlas.koth.KothService;
+import dev.portero.atlas.level.LevelModule;
+import dev.portero.atlas.level.LevelService;
+import dev.portero.atlas.menu.MenuFactory;
+import dev.portero.atlas.menu.MenuModule;
+import dev.portero.atlas.menu.api.MenuService;
 import dev.portero.atlas.pipeline.PipelineRegistry;
 import dev.portero.atlas.placeholder.PlaceholderModule;
+import dev.portero.atlas.party.PartyModule;
+import dev.portero.atlas.party.PartyService;
 import dev.portero.atlas.player.PlayerModule;
+import dev.portero.atlas.player.ProfileManager;
+import dev.portero.atlas.quest.QuestModule;
+import dev.portero.atlas.quest.QuestService;
 import dev.portero.atlas.resource.ResourceModule;
+import dev.portero.atlas.skill.SkillModule;
+import dev.portero.atlas.skill.SkillService;
 import dev.portero.atlas.scheduler.AtlasScheduler;
 import dev.portero.atlas.stat.StatModule;
 import dev.portero.atlas.scoreboard.ScoreboardManager;
+import dev.portero.atlas.worldevent.WorldEventModule;
+import dev.portero.atlas.worldevent.WorldEventService;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -66,10 +90,6 @@ public final class AtlasBootstrap {
         }
         this.services.register(DatabaseManager.class, this.database);
 
-        this.commands = new CommandManager(this.plugin);
-        this.commands.register();
-        this.services.register(CommandManager.class, this.commands);
-
         this.scoreboards = new ScoreboardManager(this.plugin);
         this.scoreboards.initialize();
         this.services.register(ScoreboardManager.class, this.scoreboards);
@@ -78,11 +98,37 @@ public final class AtlasBootstrap {
         this.modules.register(new DataModule());
         this.modules.register(new PlayerModule());
         this.modules.register(new StatModule());
+        this.modules.register(new LevelModule());
         this.modules.register(new ResourceModule());
         this.modules.register(new CombatModule());
+        this.modules.register(new SkillModule());
+        this.modules.register(new WorldEventModule());
+        this.modules.register(new QuestModule());
+        this.modules.register(new PartyModule());
+        this.modules.register(new KothModule());
         this.modules.register(new PlaceholderModule());
+        this.modules.register(new MenuModule());
         this.modules.loadAll();
         this.modules.enableAll();
+
+        MenuService menuService = this.services.require(MenuService.class);
+        MenuFactory menuFactory = this.services.require(MenuFactory.class);
+        ProfileManager profiles = this.services.require(ProfileManager.class);
+        this.commands = new CommandManager(this.plugin);
+        this.commands.register(
+                new AtlasCommand(menuService, menuFactory),
+                new GameModeCommand(),
+                new PartyCommand(this.services.require(PartyService.class), profiles,
+                        menuService, menuFactory),
+                new QuestCommand(this.services.require(QuestService.class), profiles,
+                        menuService, menuFactory),
+                new SkillCommand(this.services.require(SkillService.class), profiles,
+                        menuService, menuFactory),
+                new LevelCommand(this.services.require(LevelService.class), profiles),
+                new SettingsCommand(menuService, menuFactory),
+                new KothCommand(this.services.require(KothService.class),
+                        this.services.require(WorldEventService.class)));
+        this.services.register(CommandManager.class, this.commands);
     }
 
     public void stop() {

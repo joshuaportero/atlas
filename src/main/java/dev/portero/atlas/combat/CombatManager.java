@@ -17,6 +17,7 @@ public final class CombatManager {
     private final Pipeline<DamageContext> pipeline;
     private final EventBus events;
     private final ThreadLocal<Boolean> applying = ThreadLocal.withInitial(() -> false);
+    private volatile boolean enabled = true;
 
     public CombatManager(ProfileManager profiles, StatManager stats,
                          PipelineRegistry pipelines, EventBus events) {
@@ -37,6 +38,14 @@ public final class CombatManager {
 
     public boolean applying() {
         return Boolean.TRUE.equals(this.applying.get());
+    }
+
+    public boolean enabled() {
+        return this.enabled;
+    }
+
+    public void enabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public DamageContext calculate(Entity attacker, Entity victim, double rawDamage, DamageType type) {

@@ -20,6 +20,8 @@ public final class PlayerModule implements AtlasModule {
         context.services().register(ProfileManager.class, profiles);
         context.service(ProfileComponentRegistry.class)
                 .register(QuestStateComponent.key, QuestStateComponent::new);
+        context.service(ProfileComponentRegistry.class)
+                .register(SettingsComponent.key, SettingsComponent::new);
 
         PipelineRegistry pipelines = context.service(PipelineRegistry.class);
         pipelines.require("player.ready", PlayerReadyContext.class)

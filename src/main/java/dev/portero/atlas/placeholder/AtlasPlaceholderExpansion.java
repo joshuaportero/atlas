@@ -1,5 +1,6 @@
 package dev.portero.atlas.placeholder;
 
+import dev.portero.atlas.level.LevelService;
 import dev.portero.atlas.player.AtlasPlayer;
 import dev.portero.atlas.player.ProfileManager;
 import dev.portero.atlas.resource.ResourceManager;
@@ -11,29 +12,34 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
+
 public final class AtlasPlaceholderExpansion extends PlaceholderExpansion {
 
     private final Plugin plugin;
     private final ProfileManager profiles;
     private final StatManager stats;
     private final ResourceManager resources;
+    private final LevelService levels;
 
     public AtlasPlaceholderExpansion(Plugin plugin, ProfileManager profiles,
-                                     StatManager stats, ResourceManager resources) {
+                                     StatManager stats, ResourceManager resources,
+                                     LevelService levels) {
         this.plugin = plugin;
         this.profiles = profiles;
         this.stats = stats;
         this.resources = resources;
+        this.levels = levels;
     }
 
     @Override
     public @NotNull String getIdentifier() {
-        return "atlas";
+        return this.plugin.getPluginMeta().getName().toLowerCase(Locale.ROOT);
     }
 
     @Override
     public @NotNull String getAuthor() {
-        return "Portero";
+        return this.plugin.getPluginMeta().getAuthors().stream().findFirst().orElse("Unknown");
     }
 
     @Override
@@ -77,6 +83,12 @@ public final class AtlasPlaceholderExpansion extends PlaceholderExpansion {
 
         if ("name".equals(params)) {
             return player.name();
+        }
+        if ("level".equals(params)) {
+            return Integer.toString(this.levels.level(player));
+        }
+        if ("xp".equals(params)) {
+            return Long.toString(this.levels.xp(player));
         }
         return "";
     }

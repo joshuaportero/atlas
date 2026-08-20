@@ -109,6 +109,18 @@ public final class AtlasPlayer {
         this.cooldowns.put(key, System.currentTimeMillis() + durationMillis);
     }
 
+    public Map<String, Long> cooldowns() {
+        return Map.copyOf(this.cooldowns);
+    }
+
+    public void clearCooldowns() {
+        this.cooldowns.clear();
+    }
+
+    public void removeCooldown(String key) {
+        this.cooldowns.remove(key);
+    }
+
     public long cooldownRemaining(String key) {
         Long expiresAt = this.cooldowns.get(key);
         if (expiresAt == null) {
@@ -139,6 +151,11 @@ public final class AtlasPlayer {
 
     public void questState(String key, String value) {
         this.questStates.put(key, value);
+        this.profile().markDirty();
+    }
+
+    public void removeQuestState(String key) {
+        this.questStates.remove(key);
         this.profile().markDirty();
     }
 
