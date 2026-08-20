@@ -6,11 +6,15 @@ import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.config.ConfigType;
 import dev.portero.atlas.event.EventBus;
 import dev.portero.atlas.pipeline.PipelineRegistry;
+import dev.portero.atlas.player.AtlasPlayer;
 import dev.portero.atlas.player.ProfileManager;
+import dev.portero.atlas.player.SettingsComponent;
 import dev.portero.atlas.stat.StatManager;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
+@Slf4j
 public final class CombatModule implements AtlasModule {
 
     @Override
@@ -31,12 +35,29 @@ public final class CombatModule implements AtlasModule {
     @Override
     public void enable(ModuleContext context) {
         YamlConfiguration config = context.service(ConfigManager.class).getConfig(ConfigType.DEFAULT);
-        if (config != null && !config.getBoolean("combat.enabled", true)) {
+        CombatManager combat = context.service(CombatManager.class);
+        combat.enabled(config == null || config.getBoolean("combat.enabled", true));
+
+        Plugin plugin = context.plugin();
+        plugin.getServer().getPluginManager().registerEvents(new CombatListener(combat), plugin);
+
+        if (plugin.getServer().getPluginManager().getPlugin("FancyHolograms") == null) {
+            log.info("FancyHolograms not found; floating combat numbers are disabled");
             return;
         }
 
-        Plugin plugin = context.plugin();
-        plugin.getServer().getPluginManager().registerEvents(
-                new CombatListener(context.service(CombatManager.class)), plugin);
+        DamageHologramService holograms = new DamageHologramService(plugin);
+        context.service(EventBus.class).subscribe(AtlasPostDamageEvent.class, event -> {
+            AtlasPlayer attacker = event.context().attackerPlayer();
+            if (attacker != null) {
+                boolean feedback = attacker.profile().component(SettingsComponent.class)
+                        .map(SettingsComponent::combatFeedback)
+                        .orElse(true);
+                if (!feedback) {
+                    return;
+                }
+            }
+            holograms.show(event);
+        });
     }
 }

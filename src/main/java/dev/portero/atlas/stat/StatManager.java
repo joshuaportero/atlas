@@ -62,11 +62,39 @@ public final class StatManager {
     }
 
     public void setBase(AtlasPlayer player, StatType type, double value) {
-        StatComponent component = player.profile().component(StatComponent.class)
-                .orElseGet(StatComponent::new);
+        StatComponent component = this.component(player);
         component.set(type, value);
         player.profile().attach(component);
         this.recalculate(player);
+    }
+
+    public boolean spendPoint(AtlasPlayer player, StatType type) {
+        StatComponent component = this.component(player);
+        if (component.points() <= 0) {
+            return false;
+        }
+        component.points(component.points() - 1);
+        component.set(type, component.get(type) + 1.0);
+        player.profile().attach(component);
+        this.recalculate(player);
+        return true;
+    }
+
+    public void addPoints(AtlasPlayer player, int amount) {
+        StatComponent component = this.component(player);
+        component.points(component.points() + amount);
+        player.profile().attach(component);
+    }
+
+    public int points(AtlasPlayer player) {
+        return this.component(player).points();
+    }
+
+    public StatComponent component(AtlasPlayer player) {
+        StatComponent component = player.profile().component(StatComponent.class)
+                .orElseGet(StatComponent::new);
+        player.profile().attach(component, false);
+        return component;
     }
 
     public void addModifier(AtlasPlayer player, StatModifier modifier) {

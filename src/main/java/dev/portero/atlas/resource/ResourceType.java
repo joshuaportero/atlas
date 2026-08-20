@@ -7,7 +7,7 @@ public final class ResourceType {
     private final String id;
     private final String displayName;
     private final String maxStatId;
-    private final double regenPerSecond;
+    private volatile double regenPerSecond;
 
     public ResourceType(String id, String displayName, String maxStatId, double regenPerSecond) {
         this.id = id;
@@ -30,6 +30,10 @@ public final class ResourceType {
 
     public double regenPerSecond() {
         return this.regenPerSecond;
+    }
+
+    public void regenPerSecond(double regenPerSecond) {
+        this.regenPerSecond = Math.max(0.0, regenPerSecond);
     }
 
     @Override

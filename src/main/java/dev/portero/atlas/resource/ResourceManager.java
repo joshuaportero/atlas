@@ -4,6 +4,7 @@ import dev.portero.atlas.event.EventBus;
 import dev.portero.atlas.event.StatRecalculatedEvent;
 import dev.portero.atlas.player.AtlasPlayer;
 import dev.portero.atlas.player.ProfileManager;
+import dev.portero.atlas.player.SettingsComponent;
 import dev.portero.atlas.scheduler.AtlasScheduler;
 import dev.portero.atlas.stat.StatManager;
 import org.bukkit.configuration.ConfigurationSection;
@@ -113,6 +114,12 @@ public final class ResourceManager {
     private void tick(double seconds) {
         for (AtlasPlayer player : this.profiles.online()) {
             if (!player.handle().isOnline()) {
+                continue;
+            }
+            boolean regen = player.profile().component(SettingsComponent.class)
+                    .map(SettingsComponent::resourceRegen)
+                    .orElse(true);
+            if (!regen) {
                 continue;
             }
             for (ResourceType type : this.registry.values()) {

@@ -1,5 +1,7 @@
 package dev.portero.atlas.bootstrap;
 
+import dev.portero.atlas.cmd.AtlasCommand;
+import dev.portero.atlas.cmd.GameModeCommand;
 import dev.portero.atlas.command.CommandManager;
 import dev.portero.atlas.config.ConfigManager;
 import dev.portero.atlas.config.ConfigType;
@@ -7,13 +9,18 @@ import dev.portero.atlas.combat.CombatModule;
 import dev.portero.atlas.data.DataModule;
 import dev.portero.atlas.database.DatabaseManager;
 import dev.portero.atlas.event.EventBus;
+import dev.portero.atlas.menu.MenuFactory;
+import dev.portero.atlas.menu.MenuModule;
+import dev.portero.atlas.menu.api.MenuService;
 import dev.portero.atlas.pipeline.PipelineRegistry;
 import dev.portero.atlas.placeholder.PlaceholderModule;
 import dev.portero.atlas.player.PlayerModule;
 import dev.portero.atlas.resource.ResourceModule;
+import dev.portero.atlas.skill.SkillModule;
 import dev.portero.atlas.scheduler.AtlasScheduler;
 import dev.portero.atlas.stat.StatModule;
 import dev.portero.atlas.scoreboard.ScoreboardManager;
+import dev.portero.atlas.worldevent.WorldEventModule;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -66,10 +73,6 @@ public final class AtlasBootstrap {
         }
         this.services.register(DatabaseManager.class, this.database);
 
-        this.commands = new CommandManager(this.plugin);
-        this.commands.register();
-        this.services.register(CommandManager.class, this.commands);
-
         this.scoreboards = new ScoreboardManager(this.plugin);
         this.scoreboards.initialize();
         this.services.register(ScoreboardManager.class, this.scoreboards);
@@ -80,9 +83,19 @@ public final class AtlasBootstrap {
         this.modules.register(new StatModule());
         this.modules.register(new ResourceModule());
         this.modules.register(new CombatModule());
+        this.modules.register(new SkillModule());
+        this.modules.register(new WorldEventModule());
         this.modules.register(new PlaceholderModule());
+        this.modules.register(new MenuModule());
         this.modules.loadAll();
         this.modules.enableAll();
+
+        this.commands = new CommandManager(this.plugin);
+        this.commands.register(
+                new AtlasCommand(this.services.require(MenuService.class),
+                        this.services.require(MenuFactory.class)),
+                new GameModeCommand());
+        this.services.register(CommandManager.class, this.commands);
     }
 
     public void stop() {
