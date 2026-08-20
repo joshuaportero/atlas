@@ -11,6 +11,8 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
+
 public final class AtlasPlaceholderExpansion extends PlaceholderExpansion {
 
     private final Plugin plugin;
@@ -28,12 +30,12 @@ public final class AtlasPlaceholderExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "atlas";
+        return this.plugin.getPluginMeta().getName().toLowerCase(Locale.ROOT);
     }
 
     @Override
     public @NotNull String getAuthor() {
-        return "Portero";
+        return this.plugin.getPluginMeta().getAuthors().stream().findFirst().orElse("Unknown");
     }
 
     @Override
