@@ -21,7 +21,6 @@ import dev.portero.atlas.menu.player.PartyMenu;
 import dev.portero.atlas.menu.player.PlayerHubMenu;
 import dev.portero.atlas.menu.player.PlayerSettingsMenu;
 import dev.portero.atlas.menu.player.ProfileMenu;
-import dev.portero.atlas.menu.player.QuestMenu;
 import dev.portero.atlas.menu.player.ResourceMenu;
 import dev.portero.atlas.menu.player.SkillMenu;
 import dev.portero.atlas.menu.player.StatMenu;
@@ -29,7 +28,6 @@ import dev.portero.atlas.party.PartyService;
 import dev.portero.atlas.player.AtlasPlayer;
 import dev.portero.atlas.player.ProfileManager;
 import dev.portero.atlas.player.SettingsComponent;
-import dev.portero.atlas.quest.QuestService;
 import dev.portero.atlas.resource.ResourceManager;
 import dev.portero.atlas.skill.SkillService;
 import dev.portero.atlas.stat.StatManager;
@@ -47,13 +45,12 @@ public final class MenuFactory {
     private final ConfigManager configs;
     private final DatabaseManager database;
     private final PartyService parties;
-    private final QuestService quests;
     private final LevelService levels;
 
     public MenuFactory(ProfileManager profiles, StatManager stats, ResourceManager resources,
                        CombatManager combat, SkillService skills, WorldEventService events,
                        ConfigManager configs, DatabaseManager database, PartyService parties,
-                       QuestService quests, LevelService levels) {
+                       LevelService levels) {
         this.profiles = profiles;
         this.stats = stats;
         this.resources = resources;
@@ -63,7 +60,6 @@ public final class MenuFactory {
         this.configs = configs;
         this.database = database;
         this.parties = parties;
-        this.quests = quests;
         this.levels = levels;
     }
 
@@ -103,10 +99,6 @@ public final class MenuFactory {
         return this.parties;
     }
 
-    public QuestService quests() {
-        return this.quests;
-    }
-
     public LevelService levels() {
         return this.levels;
     }
@@ -140,10 +132,6 @@ public final class MenuFactory {
 
     public AtlasMenu skillMenu() {
         return new SkillMenu(this);
-    }
-
-    public AtlasMenu questMenu() {
-        return new QuestMenu(this);
     }
 
     public AtlasMenu eventMenu() {

@@ -65,7 +65,7 @@ bukkit {
     main = "dev.portero.atlas.AtlasPlugin"
     version = project.version.toString()
     apiVersion = "26.2"
-    description = "Atlas is the core RPG plugin for quests, combat(skills), mmo, progression, and world events."
+    description = "Atlas is the core RPG plugin for combat(skills), mmo, progression, and world events."
     website = "https://joshua.portero.dev/"
     authors = listOf("Portero")
     softDepend = listOf("PlaceholderAPI", "FancyHolograms")

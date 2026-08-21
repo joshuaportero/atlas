@@ -20,7 +20,6 @@ public final class AtlasPlayer {
     private final Session session;
     private final Map<String, List<StatModifier>> modifiers = new ConcurrentHashMap<>();
     private final Map<String, Long> cooldowns = new ConcurrentHashMap<>();
-    private final Map<String, String> questStates = new ConcurrentHashMap<>();
     private final Map<String, Double> resources = new ConcurrentHashMap<>();
     private volatile StatSnapshot stats = StatSnapshot.empty();
     private volatile UUID partyId;
@@ -143,28 +142,5 @@ public final class AtlasPlayer {
 
     public void absorption(double absorption) {
         this.absorption = Math.max(0.0, absorption);
-    }
-
-    public Optional<String> questState(String key) {
-        return Optional.ofNullable(this.questStates.get(key));
-    }
-
-    public void questState(String key, String value) {
-        this.questStates.put(key, value);
-        this.profile().markDirty();
-    }
-
-    public void removeQuestState(String key) {
-        this.questStates.remove(key);
-        this.profile().markDirty();
-    }
-
-    public Map<String, String> questStates() {
-        return Map.copyOf(this.questStates);
-    }
-
-    public void questStates(Map<String, String> states) {
-        this.questStates.clear();
-        this.questStates.putAll(states);
     }
 }

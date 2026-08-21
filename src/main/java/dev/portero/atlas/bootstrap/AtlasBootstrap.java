@@ -5,7 +5,6 @@ import dev.portero.atlas.cmd.GameModeCommand;
 import dev.portero.atlas.cmd.KothCommand;
 import dev.portero.atlas.cmd.LevelCommand;
 import dev.portero.atlas.cmd.PartyCommand;
-import dev.portero.atlas.cmd.QuestCommand;
 import dev.portero.atlas.cmd.SettingsCommand;
 import dev.portero.atlas.cmd.SkillCommand;
 import dev.portero.atlas.command.CommandManager;
@@ -28,8 +27,6 @@ import dev.portero.atlas.party.PartyModule;
 import dev.portero.atlas.party.PartyService;
 import dev.portero.atlas.player.PlayerModule;
 import dev.portero.atlas.player.ProfileManager;
-import dev.portero.atlas.quest.QuestModule;
-import dev.portero.atlas.quest.QuestService;
 import dev.portero.atlas.resource.ResourceModule;
 import dev.portero.atlas.skill.SkillModule;
 import dev.portero.atlas.skill.SkillService;
@@ -103,7 +100,6 @@ public final class AtlasBootstrap {
         this.modules.register(new CombatModule());
         this.modules.register(new SkillModule());
         this.modules.register(new WorldEventModule());
-        this.modules.register(new QuestModule());
         this.modules.register(new PartyModule());
         this.modules.register(new KothModule());
         this.modules.register(new PlaceholderModule());
@@ -119,8 +115,6 @@ public final class AtlasBootstrap {
                 new AtlasCommand(menuService, menuFactory),
                 new GameModeCommand(),
                 new PartyCommand(this.services.require(PartyService.class), profiles,
-                        menuService, menuFactory),
-                new QuestCommand(this.services.require(QuestService.class), profiles,
                         menuService, menuFactory),
                 new SkillCommand(this.services.require(SkillService.class), profiles,
                         menuService, menuFactory),

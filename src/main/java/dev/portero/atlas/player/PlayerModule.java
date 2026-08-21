@@ -19,23 +19,12 @@ public final class PlayerModule implements AtlasModule {
         ProfileManager profiles = new ProfileManager();
         context.services().register(ProfileManager.class, profiles);
         context.service(ProfileComponentRegistry.class)
-                .register(QuestStateComponent.key, QuestStateComponent::new);
-        context.service(ProfileComponentRegistry.class)
                 .register(SettingsComponent.key, SettingsComponent::new);
 
         PipelineRegistry pipelines = context.service(PipelineRegistry.class);
         pipelines.require("player.ready", PlayerReadyContext.class)
-                .add(new AttachPlayerStage(profiles))
-                .add(new LoadQuestStateStage(profiles));
+                .add(new AttachPlayerStage(profiles));
         pipelines.require("player.close", PlayerCloseContext.class)
-                .add(new SaveQuestStateStage(profiles))
                 .add(new DetachPlayerStage(profiles));
-    }
-
-    @Override
-    public void disable(ModuleContext context) {
-        SaveQuestStateStage saver = new SaveQuestStateStage(context.service(ProfileManager.class));
-        context.service(ProfileManager.class).online().forEach(player -> saver.process(
-                new PlayerCloseContext(player.uniqueId(), player.profile(), player.handle())));
     }
 }

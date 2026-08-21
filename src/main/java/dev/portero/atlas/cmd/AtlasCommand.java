@@ -44,12 +44,6 @@ public class AtlasCommand {
         this.menus.openRoot(player, this.factory.skillMenu());
     }
 
-    @Execute(name = "quests")
-    @Permission("atlas.menu")
-    public void quests(@Context Player player) {
-        this.menus.openRoot(player, this.factory.questMenu());
-    }
-
     @Execute(name = "settings")
     @Permission("atlas.menu")
     public void settings(@Context Player player) {
@@ -66,6 +60,6 @@ public class AtlasCommand {
     public void help(@Context CommandSender sender) {
         sender.sendMessage("/atlas - player menu");
         sender.sendMessage("/atlas admin - management menu");
-        sender.sendMessage("/party /quest /skill /level /koth /settings");
+        sender.sendMessage("/party /skill /level /koth /settings");
     }
 }

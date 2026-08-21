@@ -52,16 +52,6 @@ public interface Messages {
         Args1<String> CHAT = text -> "&d[Party] &f" + text;
     }
 
-    interface Quest {
-        Args1<String> STARTED = name -> "&aQuest started: &e" + name;
-        Args1<String> ABANDONED = name -> "&cQuest abandoned: &e" + name;
-        Args2<String, Long> COMPLETED = (name, xp) -> "&aQuest complete: &e" + name
-                + " &7(+" + xp + " XP)";
-        Args0 UNKNOWN = () -> "&cUnknown quest.";
-        Args0 ALREADY = () -> "&cYou already have that quest.";
-        Args0 NOT_ACTIVE = () -> "&cThat quest is not active.";
-    }
-
     interface Skill {
         Args0 OPEN = () -> "&7Opening skills.";
         Args1<String> EQUIPPED = name -> "&aEquipped skill: &e" + name;
